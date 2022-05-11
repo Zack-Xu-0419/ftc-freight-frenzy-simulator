@@ -14,4 +14,8 @@ public class Carosel extends StationaryElement {
         }
     }
 
+    public int getDucks() {
+        return numDuck;
+    }
+
 }

@@ -17,4 +17,8 @@ public class AllianceHub extends StationaryElement {
         elements.add(levelThree);
     }
 
+    public void addElement(int level, GameElement element) {
+        elements.get(level).add(element);
+    }
+
 }

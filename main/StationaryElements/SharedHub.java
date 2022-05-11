@@ -21,4 +21,12 @@ public class SharedHub extends StationaryElement {
         elements.get(sideNum).add(element);
     }
 
+    public int getTotalWeight(ArrayList<GameElement> elements) {
+        int totalWeight = 0;
+        for (int i = 0; i < elements.size(); i++) {
+            totalWeight += elements.get(i).getWeight();
+        }
+        return totalWeight;
+    }
+
 }
