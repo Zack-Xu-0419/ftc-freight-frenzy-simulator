@@ -1,5 +1,7 @@
 package StationaryElements;
 
+import GameElements.GameElement;
+
 public class Carosel extends StationaryElement {
 
     private int numDuck = 10;
@@ -14,4 +16,12 @@ public class Carosel extends StationaryElement {
         }
     }
 
+    public int getDucks() {
+        return numDuck;
+    }
+
+    @Override
+    public void addElement(int num, GameElement element) {
+        return;
+    }
 }
