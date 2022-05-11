@@ -15,10 +15,12 @@ public class SharedHub extends StationaryElement {
         elements.add(blue);
     }
 
-    // SideNum Documentation:
-    // 0: Red Side, 1: Blue Side
-    public void addElement(int sideNum, GameElement element) {
-        elements.get(sideNum).add(element);
+    public int getTotalWeight(ArrayList<GameElement> elements) {
+        int totalWeight = 0;
+        for (int i = 0; i < elements.size(); i++) {
+            totalWeight += elements.get(i).getWeight();
+        }
+        return totalWeight;
     }
 
 }
