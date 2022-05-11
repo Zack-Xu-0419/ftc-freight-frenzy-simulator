@@ -15,4 +15,7 @@ public class StationaryElement {
         this.y = y;
     }
 
+    public void addElement(int num, GameElement element) {
+        elements.get(num).add(element);
+    }
 }
