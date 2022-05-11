@@ -1,7 +1,7 @@
 package GameElements;
 
 public class Duck extends GameElement{
-    public Duck(int xPosition, int yPostion, int weight){
-        super(xPosition, yPostion, 1);
+    public Duck(int xPosition, int yPostion){
+        super(xPosition, yPostion, 0);
     }
 }
