@@ -8,7 +8,7 @@ public class Drawer {
         int upperY = robot.getPosition()[1] - robot.getSizeY();
         int lowerY = robot.getPosition()[1] + robot.getSizeY();
         g2D.rotate(Math.toRadians(robot.getOrientation()));
-        g2D.fillPolygon(new int[]{leftX, leftX, rightX, rightX}, new int[]{upperY, lowerY, upperY, lowerY}, 4);
+        g2D.fillPolygon(new int[]{leftX, leftX, rightX, rightX}, new int[]{upperY, lowerY, lowerY, upperY}, 4);
         g2D.rotate(-1 * Math.toRadians(robot.getOrientation()));
     }
 }
