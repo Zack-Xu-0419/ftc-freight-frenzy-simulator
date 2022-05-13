@@ -39,6 +39,10 @@ public class RobotCopy extends Robot {
         return orientation;
     }
 
+    public void setOrientation(int degree) {
+        orientation = degree;
+    }
+
     public int collisionInfo(int direction) {
 
         // The input 'direction': 1-left, 2-right, 3-up, 4-down

@@ -5,6 +5,8 @@ import java.awt.event.*;
 public class DrawingTest extends JPanel implements MouseListener, KeyListener {
 
     static RobotCopy robot = new RobotCopy();
+    static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false, rotateLeft = false, rotateRight = false;
+    static int currentOrientation;
 
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
@@ -19,20 +21,43 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
         requestFocusInWindow();
         addMouseListener(this);
 
-        getInputMap(IFW).put(KeyStroke.getKeyStroke("UP"), "UP");
-        getInputMap(IFW).put(KeyStroke.getKeyStroke("DOWN"), "DOWN");
-        getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), "LEFT");
-        getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), "RIGHT");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "UP_PRESSED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "DOWN_PRESSED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "LEFT_PRESSED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "RIGHT_PRESSED");
 
-        getActionMap().put("UP", new MoveAction("UP"));
-        getActionMap().put("DOWN", new MoveAction("DOWN"));
-        getActionMap().put("LEFT", new MoveAction("LEFT"));
-        getActionMap().put("RIGHT", new MoveAction("RIGHT"));
+        getActionMap().put("UP_PRESSED", new PressMoveAction("UP"));
+        getActionMap().put("DOWN_PRESSED", new PressMoveAction("DOWN"));
+        getActionMap().put("LEFT_PRESSED", new PressMoveAction("LEFT"));
+        getActionMap().put("RIGHT_PRESSED", new PressMoveAction("RIGHT"));
+
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true), "UP_RELEASED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true), "DOWN_RELEASED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), "LEFT_RELEASED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), "RIGHT_RELEASED");
+
+        getActionMap().put("UP_RELEASED", new ReleaseMoveAction("UP"));
+        getActionMap().put("DOWN_RELEASED", new ReleaseMoveAction("DOWN"));
+        getActionMap().put("LEFT_RELEASED", new ReleaseMoveAction("LEFT"));
+        getActionMap().put("RIGHT_RELEASED", new ReleaseMoveAction("RIGHT"));
+
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "RLEFT_PRESSED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "RRIGHT_PRESSED");
+
+        getActionMap().put("RLEFT_PRESSED", new PressRotateAction("LEFT"));
+        getActionMap().put("RRIGHT_PRESSED", new PressRotateAction("RIGHT"));
+
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "RLEFT_RELEASED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "RRIGHT_RELEASED");
+
+        getActionMap().put("RLEFT_RELEASED", new ReleaseRotateAction("LEFT"));
+        getActionMap().put("RRIGHT_RELEASED", new ReleaseRotateAction("RIGHT"));
     }
 
 
     public static void main(String[] args) {
         robot.setSize(20, 20);
+        currentOrientation = robot.getOrientation();
         JFrame window = new JFrame("FTC Freight Frenzy");
         window.setBounds(100, 100, 1000 + 20, 1000 + 20);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,11 +122,11 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
         }
     }
 
-    public class MoveAction extends AbstractAction {
+    public class PressMoveAction extends AbstractAction {
 
         String direction;
 
-        MoveAction(String direction) {
+        PressMoveAction(String direction) {
             this.direction = direction;
         }
 
@@ -110,27 +135,123 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
             System.out.println("Typed!");
             switch (direction) {
                 case "UP":
-                    robot.setPosition(robot.getPosition()[0], robot.getPosition()[1] - 5);
+                    upPressed = true;
                     break;
                 case "DOWN":
-                    robot.setPosition(robot.getPosition()[0], robot.getPosition()[1] + 5);
+                    downPressed = true;
                     break;
                 case "LEFT":
-                    robot.setPosition(robot.getPosition()[0] - 5, robot.getPosition()[1]);
+                    leftPressed = true;
                     break;
                 case "RIGHT":
-                    robot.setPosition(robot.getPosition()[0] + 5, robot.getPosition()[1]);
+                    rightPressed = true;
                     break;
             }
 
         }
     }
 
+    public class ReleaseMoveAction extends AbstractAction {
+
+        String direction;
+
+        ReleaseMoveAction(String direction) {
+            this.direction = direction;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Typed!");
+            switch (direction) {
+                case "UP":
+                    upPressed = false;
+                    break;
+                case "DOWN":
+                    downPressed = false;
+                    break;
+                case "LEFT":
+                    leftPressed = false;
+                    break;
+                case "RIGHT":
+                    rightPressed = false;
+                    break;
+            }
+
+        }
+    }
+
+    public class PressRotateAction extends AbstractAction {
+
+        String direction;
+
+        PressRotateAction(String direction) {
+            this.direction = direction;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (direction) {
+                case "LEFT":
+                    rotateLeft = true;
+                    break;
+                case "RIGHT":
+                    rotateRight = true;
+                    break;
+            }
+        }
+    }
+
+    public class ReleaseRotateAction extends AbstractAction {
+
+        String direction;
+
+        ReleaseRotateAction(String direction) {
+            this.direction = direction;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (direction) {
+                case "LEFT":
+                    rotateLeft = false;
+                    break;
+                case "RIGHT":
+                    rotateRight = false;
+                    break;
+            }
+        }
+    }
+
+
+
     public static void refreshScreen(DrawingTest param) {
         Thread thread = new Thread() {
             public void run(){
                 while(true) {
                     try {
+                        if (upPressed) {
+                            robot.setPosition(robot.getPosition()[0], robot.getPosition()[1] - 5);
+                        }
+                        if (downPressed) {
+                            robot.setPosition(robot.getPosition()[0], robot.getPosition()[1] + 5);
+                        }
+                        if (leftPressed) {
+                            robot.setPosition(robot.getPosition()[0] - 5, robot.getPosition()[1]);
+                        }
+                        if (rightPressed) {
+                            robot.setPosition(robot.getPosition()[0] + 5, robot.getPosition()[1]);
+                        }
+                        if (rotateLeft) {
+                            currentOrientation = (currentOrientation + 5) % 360;
+                            robot.setOrientation(currentOrientation);
+                        }
+                        if (rotateRight) {
+                            currentOrientation = (currentOrientation) - 5 % 360;
+                            if (currentOrientation < 0) {
+                                currentOrientation = 360 + currentOrientation;
+                            }
+                            robot.setOrientation(currentOrientation);
+                        }
                         // 60 FPS
                         sleep((int) (1000.0/60));
                         param.repaint();
