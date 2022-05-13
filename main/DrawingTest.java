@@ -4,18 +4,19 @@ import java.awt.event.*;
 
 public class DrawingTest extends JPanel implements MouseListener, KeyListener {
 
-    static RobotCopy robot = new RobotCopy();
-    static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false, rotateLeft = false, rotateRight = false;
+    static Robot robot = new Robot();
+    static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
+            rotateLeft = false, rotateRight = false;
     static int currentOrientation;
 
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Drawer.drawRobot(g, robot);
     }
 
-    public DrawingTest(){
+    public DrawingTest() {
         setFocusable(true);
         requestFocus();
         requestFocusInWindow();
@@ -54,12 +55,11 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
         getActionMap().put("RRIGHT_RELEASED", new ReleaseRotateAction("RIGHT"));
     }
 
-
     public static void main(String[] args) {
         robot.setSize(20, 20);
         currentOrientation = robot.getOrientation();
         JFrame window = new JFrame("FTC Freight Frenzy");
-        window.setBounds(100, 100, 1000 + 20, 1000 + 20);
+        window.setBounds(100, 100, 900, 900);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DrawingTest dt = new DrawingTest();
         dt.setBackground(Color.WHITE);
@@ -70,13 +70,17 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
         System.out.println("App is running");
     }
 
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {
+    }
+
     public void mousePressed(MouseEvent e) {
 
     }
+
     public void mouseEntered(MouseEvent e) {
 
     }
+
     public void mouseExited(MouseEvent e) {
 
     }
@@ -91,6 +95,7 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
     public void keyTyped(KeyEvent e) {
         System.out.println("Type!");
     }
+
     public void keyReleased(KeyEvent e) {
 
     }
@@ -102,17 +107,19 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
 
         if (k == 38) {
             // Up
-            robot.setPosition(robot.getPosition()[0], robot.getPosition()[1]  - 1);
+            robot.move(3);
         }
         if (k == KeyEvent.VK_DOWN) {
             // Down
-            robot.setPosition(robot.getPosition()[0], robot.getPosition()[1]  + 1);
+            robot.move(4);
         }
         if (k == 37) {
             // Left
+            robot.move(1);
         }
         if (k == 39) {
             // Right
+            robot.move(2);
         }
 
         if (event.getKeyCode() == KeyEvent.VK_HOME) {
@@ -222,24 +229,23 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
         }
     }
 
-
-
     public static void refreshScreen(DrawingTest param) {
         Thread thread = new Thread() {
-            public void run(){
-                while(true) {
+            public void run() {
+                while (true) {
                     try {
+
                         if (upPressed) {
-                            robot.setPosition(robot.getPosition()[0], robot.getPosition()[1] - 5);
+                            robot.move(3);
                         }
                         if (downPressed) {
-                            robot.setPosition(robot.getPosition()[0], robot.getPosition()[1] + 5);
+                            robot.move(4);
                         }
                         if (leftPressed) {
-                            robot.setPosition(robot.getPosition()[0] - 5, robot.getPosition()[1]);
+                            robot.move(1);
                         }
                         if (rightPressed) {
-                            robot.setPosition(robot.getPosition()[0] + 5, robot.getPosition()[1]);
+                            robot.move(2);
                         }
                         if (rotateLeft) {
                             currentOrientation = (currentOrientation + 5) % 360;
@@ -253,7 +259,7 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
                             robot.setOrientation(currentOrientation);
                         }
                         // 60 FPS
-                        sleep((int) (1000.0/60));
+                        sleep((int) (1000.0 / 60));
                         param.repaint();
                     } catch (InterruptedException e) {
                         e.printStackTrace();

@@ -1,16 +1,20 @@
 public class Robot {
     private int position[] = { 0, 0 };
-    private int sizeX = 1; // Pixel Size from center of the robot to the edge
-    private int sizeY = 1; // Pixel Size from center of the robot to the edge
+    private int sizeX = 50; // Pixel Size from center of the robot to the edge
+    private int sizeY = 50; // Pixel Size from center of the robot to the edge
     private int orientation = 0; // Degree of rotation. 0 means Slide is facing to the other alliance
-
-    public boolean move(int amount, int direction) {
-        // Return true if the robot can be moved in a certain direction
-        return true;
-    }
 
     Robot() {
 
+    }
+
+    public void setPosition(int positionX, int positionY) {
+        this.position[0] = positionX;
+        this.position[1] = positionY;
+    }
+
+    public void setSizeX(int sizeX) {
+        this.sizeX = sizeX;
     }
 
     public int[] getPosition() {
@@ -29,7 +33,16 @@ public class Robot {
         return orientation;
     }
 
-    public int collisionInfo(int direction) {
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    public void setSize(int sizeX, int sizeY) {
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+    }
+
+    public boolean move(int direction) {
 
         // The input 'direction': 1-left, 2-right, 3-up, 4-down
 
@@ -38,28 +51,107 @@ public class Robot {
         // against the wall
         // Return -1 if robot is not touching the wall in any way.
 
-        if (orientation == 0) {
-            // If robot is not rotated(therefore we don't need trigonometry)
-            if (position[0] - sizeX < 1) {
-                // orientation 0 and is less than 1 cm to the wall.
-                return 0;
-            } else {
-                // There is more than 1 pixel gap
-                return -1;
-            }
+        // Calculate "Bounding Box"
+        double leftMostX = position[0]
+                - Math.abs((Math.sqrt(2) * sizeX) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
+        double rightMostX = position[0]
+                + Math.abs((Math.sqrt(2) * sizeX) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
+        double upMostY = position[1]
+                - Math.abs((Math.sqrt(2) * sizeY) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
+        double downMostY = position[1]
+                + Math.abs((Math.sqrt(2) * sizeY) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
+
+        switch (direction) {
+            case 1:
+                if (orientation % 90 == 0) {
+                    // If robot is not rotated(therefore we don't need trigonometry)
+                    if (position[0] - sizeX < 1) {
+                        // orientation 0 and is less than 1 cm to the wall.
+                        return false;
+                    } else {
+                        // There is more than 1 pixel gap
+                        this.position[0]--;
+                        return true;
+                    }
+                } else {
+                    // If robot is rotated
+                    if (leftMostX < 1) {
+                        System.out.println("LeftReached");
+                        return false;
+                    } else {
+                        this.position[0]--;
+                    }
+                }
+                break;
+            case 2:
+                if (orientation % 90 == 0) {
+                    // If robot is not rotated(therefore we don't need trigonometry)
+                    // 900 is the screen size
+                    if (900 - position[0] - sizeX < 1) {
+                        // orientation 0 and is less than 1 cm to the wall.
+                        return false;
+                    } else {
+                        // There is more than 1 pixel gap
+                        this.position[0]++;
+                        return true;
+                    }
+                } else {
+                    // If robot is rotated
+                    if (rightMostX > 900) {
+                        return false;
+                    } else {
+                        System.out.println("MovingRight");
+                        this.position[0]++;
+                    }
+                }
+                break;
+            case 3:
+                if (orientation % 90 < 1) {
+                    // If robot is not rotated(therefore we don't need trigonometry)
+                    // 900 is the screen size
+                    if (position[1] - sizeY < 1) {
+                        // orientation 0 and is less than 1 cm to the wall.
+                        return false;
+                    } else {
+                        // There is more than 1 pixel gap
+                        this.position[1]--;
+                        return true;
+                    }
+                } else {
+                    // If robot is rotated
+                    if (upMostY < 1) {
+                        return false;
+                    } else {
+                        this.position[1]--;
+                    }
+                }
+                break;
+            case 4:
+                if (orientation % 90 < 1) {
+                    // If robot is not rotated(therefore we don't need trigonometry)
+                    // 900 is the screen size
+                    if (900 - position[1] - sizeY < 1) {
+                        // orientation 0 and is less than 1 cm to the wall.
+                        return false;
+                    } else {
+                        // There is more than 1 pixel gap
+                        this.position[1]++;
+                        return true;
+                    }
+                } else {
+                    // If robot is rotated
+                    if (downMostY > 900) {
+                        return false;
+                    } else {
+                        System.out.println(downMostY);
+                        this.position[1]++;
+                    }
+                }
+            default:
+                return false;
         }
 
-        // If there is any rotation, we would need to do some trigonometry to come up
-        // with the 'bounding box'
-
-        double leftMostX = position[0]
-                - Math.abs((Math.sqrt(2) * sizeX) * Math.cos(Math.PI / 4 - orientation * Math.PI / 180));
-        double rightMostX = position[0]
-                + Math.abs((Math.sqrt(2) * sizeX) * Math.cos(Math.PI / 4 - orientation * Math.PI / 180));
-        double upMostY = position[1]
-                - Math.abs((Math.sqrt(2) * sizeY) * Math.cos(Math.PI / 4 - orientation * Math.PI / 180));
-        double downMostY = position[1]
-                + Math.abs((Math.sqrt(2) * sizeY) * Math.cos(Math.PI / 4 - orientation * Math.PI / 180));
+        return false;
 
     }
 }

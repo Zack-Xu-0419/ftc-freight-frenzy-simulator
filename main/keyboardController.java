@@ -32,8 +32,7 @@ class MKeyListener extends KeyAdapter {
     if (k == 38) {
       // UP
 
-      // Check if robot is partially colliding, 
-      
+      // Check if robot is partially colliding,
 
     }
     if (k == 40) {

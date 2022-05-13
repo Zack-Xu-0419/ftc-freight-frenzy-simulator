@@ -1,5 +1,5 @@
 public class RobotCopy extends Robot {
-    private int position[] = { 0, 0 };
+    private int position[] = { 200, 200 };
     private int sizeX = 1; // Pixel Size from center of the robot to the edge
     private int sizeY = 1; // Pixel Size from center of the robot to the edge
     private int orientation = 0; // Degree of rotation. 0 means Slide is facing to the other alliance
@@ -78,4 +78,3 @@ public class RobotCopy extends Robot {
         return 150;
     }
 }
-
