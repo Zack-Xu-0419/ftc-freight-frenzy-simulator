@@ -17,16 +17,16 @@ public class Field {
     public AllianceHub allianceHub = new AllianceHub(x_alliance, y_allianceHub);
     public Carosel carosel = new Carosel(x_carosel, y_carosel);
     public SharedHub sharedHub = new SharedHub(x_sharedHub, y_sharedHub);
-    private final int size = 100;
-    private final int robotAreaSize = 10;
+    public final int size = 900;
+    public final int robotAreaSize = 150;
 
     //inistialize all the game element, set radom postion
     public Field(){
         for(int i = 0; i < numOfBall; i++){
             int x, y;
             do{
-                x = (int)Math.random() * (size - robotAreaSize) + robotAreaSize;
-                y = (int)Math.random() * (size - robotAreaSize) + robotAreaSize;
+                x = (int)Math.random() * robotAreaSize;
+                y = (int)Math.random() * robotAreaSize;
             }while(check(x, y));
             balls[i] = new Ball(x, y);
 
@@ -35,8 +35,8 @@ public class Field {
         for(int i = 0; i < numOfCube; i++){
             int x, y;
             do{
-                x = (int)Math.random() * (size - robotAreaSize) + robotAreaSize;
-                y = (int)Math.random() * (size - robotAreaSize) + robotAreaSize;
+                x = (int)Math.random() * robotAreaSize;
+                y = (int)Math.random() * robotAreaSize;
             }while(check(x, y));
             //balls[i] = new Ball(x, y);
             
@@ -45,19 +45,17 @@ public class Field {
         for(int i = 0; i < numOfDuck; i++){
             int x, y;
             do{
-                x = (int)Math.random() * (size - robotAreaSize) + robotAreaSize;
-                y = (int)Math.random() * (size - robotAreaSize) + robotAreaSize;
+                x = (int)Math.random() * robotAreaSize;
+                y = (int)Math.random() * robotAreaSize;
             }while(check(x, y));
             ducks[i] = new Duck(x, y);
             
         }
     }
+
+
     //check whether this radom point has something on it
     private boolean check(int x, int y){
-        if(x < robotAreaSize && y <robotAreaSize) return false;
-        if(x == x_alliance && y== y_allianceHub)return false;
-        if(x == x_carosel && y == y_carosel)return false;
-        if(x == x_sharedHub && y == y_sharedHub)return false;
         for(int i = 0; i < numOfBall && balls[i] != null; i++){
             if(x == balls[i].getX() && y == balls[i].getY()){
                 return false;
@@ -75,4 +73,26 @@ public class Field {
         }
         return true;
     }
+    public boolean move(int from_x, int from_y, int to_x, int to_y){
+        for(int i = 0; i < balls.length; i++){
+            if(balls[i].getX() == from_x && balls[i].getY() == from_y){
+                balls[i].move(to_x, to_y);
+                return true;
+            }
+        }
+        for(int i = 0; i < cubes.length; i++){
+            if(cubes[i].getX() == from_x && cubes[i].getY() == from_y){
+                cubes[i].move(to_x, to_y);
+                return true;
+            }
+        }
+        for(int i = 0; i < ducks.length; i++){
+            if(ducks[i].getX() == from_x && ducks[i].getY() == from_y){
+                ducks[i].move(to_x, to_y);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
