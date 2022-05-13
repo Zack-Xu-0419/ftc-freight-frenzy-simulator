@@ -59,7 +59,7 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
         robot.setSize(20, 20);
         currentOrientation = robot.getOrientation();
         JFrame window = new JFrame("FTC Freight Frenzy");
-        window.setBounds(100, 100, 900, 900);
+        window.setBounds(100, 100, 900 + 20, 900 + 57);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DrawingTest dt = new DrawingTest();
         dt.setBackground(Color.WHITE);
@@ -89,11 +89,11 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
     public void mouseReleased(MouseEvent e) {
         System.out.println("Click!");
         Point p = e.getPoint();
-        robot.setPosition(p.x, p.y);
+        System.out.println("" + p.x + ", " + p.y);
     }
 
     public void keyTyped(KeyEvent e) {
-        System.out.println("Type!");
+
     }
 
     public void keyReleased(KeyEvent e) {
@@ -139,7 +139,6 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Typed!");
             switch (direction) {
                 case "UP":
                     upPressed = true;
@@ -168,7 +167,6 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Typed!");
             switch (direction) {
                 case "UP":
                     upPressed = false;
