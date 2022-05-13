@@ -52,6 +52,8 @@ public class Field {
             
         }
     }
+
+
     //check whether this radom point has something on it
     private boolean check(int x, int y){
         if(x < robotAreaSize && y <robotAreaSize) return false;
@@ -75,4 +77,26 @@ public class Field {
         }
         return true;
     }
+    public boolean move(int from_x, int from_y, int to_x, int to_y){
+        for(int i = 0; i < balls.length; i++){
+            if(balls[i].getX() == from_x && balls[i].getY() == from_y){
+                balls[i].move(to_x, to_y);
+                return true;
+            }
+        }
+        for(int i = 0; i < cubes.length; i++){
+            if(cubes[i].getX() == from_x && cubes[i].getY() == from_y){
+                cubes[i].move(to_x, to_y);
+                return true;
+            }
+        }
+        for(int i = 0; i < ducks.length; i++){
+            if(ducks[i].getX() == from_x && ducks[i].getY() == from_y){
+                ducks[i].move(to_x, to_y);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
