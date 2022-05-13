@@ -3,6 +3,7 @@ public class Robot {
     private int sizeX = 50; // Pixel Size from center of the robot to the edge
     private int sizeY = 50; // Pixel Size from center of the robot to the edge
     private int orientation = 0; // Degree of rotation. 0 means Slide is facing to the other alliance
+    private int speed = 5;
 
     Robot() {
 
@@ -70,7 +71,7 @@ public class Robot {
                         return false;
                     } else {
                         // There is more than 1 pixel gap
-                        this.position[0]--;
+                        this.position[0]-= speed;
                         return true;
                     }
                 } else {
@@ -79,7 +80,7 @@ public class Robot {
                         System.out.println("LeftReached");
                         return false;
                     } else {
-                        this.position[0]--;
+                        this.position[0]-= speed;
                     }
                 }
                 break;
@@ -92,7 +93,7 @@ public class Robot {
                         return false;
                     } else {
                         // There is more than 1 pixel gap
-                        this.position[0]++;
+                        this.position[0]+= speed;
                         return true;
                     }
                 } else {
@@ -101,7 +102,7 @@ public class Robot {
                         return false;
                     } else {
                         System.out.println("MovingRight");
-                        this.position[0]++;
+                        this.position[0]+= speed;
                     }
                 }
                 break;
@@ -114,7 +115,7 @@ public class Robot {
                         return false;
                     } else {
                         // There is more than 1 pixel gap
-                        this.position[1]--;
+                        this.position[1]-= speed;
                         return true;
                     }
                 } else {
@@ -122,7 +123,7 @@ public class Robot {
                     if (upMostY < 1) {
                         return false;
                     } else {
-                        this.position[1]--;
+                        this.position[1]-= speed;
                     }
                 }
                 break;
@@ -135,7 +136,7 @@ public class Robot {
                         return false;
                     } else {
                         // There is more than 1 pixel gap
-                        this.position[1]++;
+                        this.position[1] += speed;
                         return true;
                     }
                 } else {
@@ -144,7 +145,7 @@ public class Robot {
                         return false;
                     } else {
                         System.out.println(downMostY);
-                        this.position[1]++;
+                        this.position[1] += speed;
                     }
                 }
             default:
