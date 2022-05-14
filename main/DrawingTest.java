@@ -58,7 +58,7 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
     }
 
     public static void main(String[] args) {
-        robot.setSize(20, 30);
+        robot.setSize(50, 50);
         JFrame window = new JFrame("FTC Freight Frenzy");
         window.setBounds(100, 100, 900 + 20, 900 + 57);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
