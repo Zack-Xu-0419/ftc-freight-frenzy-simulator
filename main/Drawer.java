@@ -5,6 +5,7 @@ import GameElements.*;
 public class Drawer {
     public static void drawRobot(Graphics g, Robot robot) {
         Graphics2D g2D = (Graphics2D) g;
+        g2D.setColor(Color.BLACK);
         int leftX = robot.getPosition()[0] - robot.getSizeX();
         int rightX = robot.getPosition()[0] + robot.getSizeX();
         int upperY = robot.getPosition()[1] - robot.getSizeY();

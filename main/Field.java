@@ -3,8 +3,8 @@ import StationaryElements.*;
 
 public class Field {
     int numOfDuck = 10;
-    int numOfCube = 20;
-    int numOfBall = 10;
+    int numOfCube = 28;
+    int numOfBall = 20;
     int x_alliance;
     int y_allianceHub;
     int x_carosel;
@@ -25,9 +25,9 @@ public class Field {
         for(int i = 0; i < numOfBall; i++){
             int x, y;
             do{
-                x = (int)Math.random() * robotAreaSize;
-                y = (int)Math.random() * robotAreaSize;
-            }while(check(x, y));
+                x = (int) (Math.random() * robotAreaSize);
+                y = (int) (Math.random() * robotAreaSize);
+            }while(!check(x, y));
             balls[i] = new Ball(x, y);
 
         }
@@ -35,19 +35,27 @@ public class Field {
         for(int i = 0; i < numOfCube; i++){
             int x, y;
             do{
-                x = (int)Math.random() * robotAreaSize;
-                y = (int)Math.random() * robotAreaSize;
-            }while(check(x, y));
-            //balls[i] = new Ball(x, y);
+                x = (int) (Math.random() * robotAreaSize);
+                y = (int) (Math.random() * robotAreaSize);
+            }while(!check(x, y));
+            if (i < 13) {
+                cubes[i] = new Cube(x, y, 2);
+            }
+            else if (i < 23) {
+                cubes[i] = new Cube(x, y, 3);
+            }
+            else {
+                cubes[i] = new Cube(x, y, 4);
+            }
             
         }
 
         for(int i = 0; i < numOfDuck; i++){
             int x, y;
             do{
-                x = (int)Math.random() * robotAreaSize;
-                y = (int)Math.random() * robotAreaSize;
-            }while(check(x, y));
+                x = (int) (Math.random() * robotAreaSize);
+                y = (int) (Math.random() * robotAreaSize);
+            }while(!check(x, y));
             ducks[i] = new Duck(x, y);
             
         }

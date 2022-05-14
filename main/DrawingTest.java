@@ -4,6 +4,7 @@ import java.awt.event.*;
 
 public class DrawingTest extends JPanel implements MouseListener, KeyListener {
 
+    static Field field = new Field();
     static Robot robot = new Robot();
     static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
             rotateLeft = false, rotateRight = false;
@@ -13,6 +14,7 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Drawer.drawField(g, field);
         Drawer.drawRobot(g, robot);
     }
 
