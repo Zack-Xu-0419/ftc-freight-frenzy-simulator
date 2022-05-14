@@ -77,7 +77,7 @@ public class Robot {
                 } else {
                     // If robot is rotated
                     if (leftMostX < 1) {
-                        rotateAgainstWall();
+                        rotateAgainstWall(direction);
                         System.out.println("LeftReached");
                         return false;
                     } else {
@@ -100,7 +100,7 @@ public class Robot {
                 } else {
                     // If robot is rotated
                     if (rightMostX > 900) {
-                        rotateAgainstWall();
+                        rotateAgainstWall(direction);
                         return false;
                     } else {
                         System.out.println("MovingRight");
@@ -123,7 +123,7 @@ public class Robot {
                 } else {
                     // If robot is rotated
                     if (upMostY < 1) {
-                        rotateAgainstWall();
+                        rotateAgainstWall(direction);
                         return false;
                     } else {
                         this.position[1] -= speed;
@@ -145,7 +145,7 @@ public class Robot {
                 } else {
                     // If robot is rotated
                     if (downMostY > 900) {
-                        rotateAgainstWall();
+                        rotateAgainstWall(direction);
                         return false;
                     } else {
                         System.out.println(downMostY);
@@ -159,17 +159,17 @@ public class Robot {
         return false;
     }
 
-    public boolean rotateAgainstWall() {
+    public boolean rotateAgainstWall(int direction) {
         if (this.orientation % 90 > 45) {
-            while (orientation % 90 != 0) {
+            if (orientation % 90 != 0) {
                 this.orientation++;
             }
         } else {
-            while (orientation % 90 != 0) {
+            if (orientation % 90 != 0) {
                 this.orientation--;
             }
         }
-        this.move(1);
+        this.move(direction);
         return true;
     }
 }
