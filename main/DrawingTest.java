@@ -58,8 +58,7 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
     }
 
     public static void main(String[] args) {
-        robot.setSize(20, 20);
-        currentOrientation = robot.getOrientation();
+        robot.setSize(20, 30);
         JFrame window = new JFrame("FTC Freight Frenzy");
         window.setBounds(100, 100, 900 + 20, 900 + 57);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -234,7 +233,8 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
             public void run() {
                 while (true) {
                     try {
-
+                        currentOrientation = robot.getOrientation();
+                        System.out.println(robot.getOrientation());
                         if (upPressed) {
                             robot.move(3);
                         }
@@ -261,6 +261,8 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
                         // 60 FPS
                         sleep((int) (1000.0 / 60));
                         param.repaint();
+
+                        System.out.println("AFT" + robot.getOrientation());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

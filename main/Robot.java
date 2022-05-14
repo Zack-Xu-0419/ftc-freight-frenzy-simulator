@@ -71,16 +71,17 @@ public class Robot {
                         return false;
                     } else {
                         // There is more than 1 pixel gap
-                        this.position[0]-= speed;
+                        this.position[0] -= speed;
                         return true;
                     }
                 } else {
                     // If robot is rotated
                     if (leftMostX < 1) {
+                        rotateAgainstWall();
                         System.out.println("LeftReached");
                         return false;
                     } else {
-                        this.position[0]-= speed;
+                        this.position[0] -= speed;
                     }
                 }
                 break;
@@ -93,16 +94,17 @@ public class Robot {
                         return false;
                     } else {
                         // There is more than 1 pixel gap
-                        this.position[0]+= speed;
+                        this.position[0] += speed;
                         return true;
                     }
                 } else {
                     // If robot is rotated
                     if (rightMostX > 900) {
+                        rotateAgainstWall();
                         return false;
                     } else {
                         System.out.println("MovingRight");
-                        this.position[0]+= speed;
+                        this.position[0] += speed;
                     }
                 }
                 break;
@@ -115,15 +117,16 @@ public class Robot {
                         return false;
                     } else {
                         // There is more than 1 pixel gap
-                        this.position[1]-= speed;
+                        this.position[1] -= speed;
                         return true;
                     }
                 } else {
                     // If robot is rotated
                     if (upMostY < 1) {
+                        rotateAgainstWall();
                         return false;
                     } else {
-                        this.position[1]-= speed;
+                        this.position[1] -= speed;
                     }
                 }
                 break;
@@ -142,6 +145,7 @@ public class Robot {
                 } else {
                     // If robot is rotated
                     if (downMostY > 900) {
+                        rotateAgainstWall();
                         return false;
                     } else {
                         System.out.println(downMostY);
@@ -153,5 +157,19 @@ public class Robot {
         }
 
         return false;
+    }
+
+    public boolean rotateAgainstWall() {
+        if (this.orientation % 90 > 45) {
+            while (orientation % 90 != 0) {
+                this.orientation++;
+            }
+        } else {
+            while (orientation % 90 != 0) {
+                this.orientation--;
+            }
+        }
+        this.move(1);
+        return true;
     }
 }
