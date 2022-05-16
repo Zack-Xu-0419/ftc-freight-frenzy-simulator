@@ -103,7 +103,7 @@ public class Robot {
                         rotateAgainstWall(direction);
                         return false;
                     } else {
-                        System.out.println("MovingRight");
+                        System.out.println(position[0]);
                         this.position[0] += speed;
                     }
                 }
