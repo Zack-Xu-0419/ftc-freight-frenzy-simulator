@@ -1,5 +1,5 @@
 public class Robot {
-    private int position[] = { 0, 0 };
+    private int position[] = {0, 0};
     private int sizeX = 50; // Pixel Size from center of the robot to the edge
     private int sizeY = 50; // Pixel Size from center of the robot to the edge
     private int orientation = 0; // Degree of rotation. 0 means Slide is facing to the other alliance
@@ -85,8 +85,7 @@ public class Robot {
                             return true;
                         }
                     }
-                }
-                else {
+                } else {
                     // If robot is rotated
                     if (sizeX <= sizeY) {
                         if (leftMostX < 10) {
@@ -96,8 +95,7 @@ public class Robot {
                         } else {
                             this.position[0] -= speed;
                         }
-                    }
-                    else {
+                    } else {
                         if (leftMostX < 0) {
                             rotateAgainstWall(direction);
                             System.out.println("LeftReached");
@@ -126,14 +124,13 @@ public class Robot {
                         // 900 is the screen size
                         if (900 - position[0] - sizeY < 1) {
                             // orientation 0 and is less than 1 cm to the wall.return false;
-                            } else {
-                                // There is more than 1 pixel gap
-                                this.position[0] += speed;
-                                return true;
-                            }
+                        } else {
+                            // There is more than 1 pixel gap
+                            this.position[0] += speed;
+                            return true;
+                        }
                     }
                 } else {
-<<<<<<< HEAD
                     // If robot is rotated
                     if (rightMostX > 900) {
                         rotateAgainstWall(direction);
@@ -141,139 +138,135 @@ public class Robot {
                     } else {
                         System.out.println(position[0]);
                         this.position[0] += speed;
-=======
-                    if (sizeX <= sizeY) {
-                        // If robot is rotated
-                        if (rightMostX > 900 - 10) {
-                            rotateAgainstWall(direction);
-                            return false;
-                        } else {
-                            System.out.println("MovingRight");
-                            this.position[0] += speed;
-                        }
-                    }
-                    else {
-                        if (rightMostX > 900 + 10) {
-                            rotateAgainstWall(direction);
-                            return false;
-                        } else {
-                            System.out.println("MovingRight");
-                            this.position[0] += speed;
-                        }
->>>>>>> 86339a7c32865ce474128f142ceedb356790d990
-                    }
-                }
-                break;
-            case 3:
-                if (orientation % 90 == 0) {
-                    if ((orientation / 90) % 2 == 0) {
-                        // If robot is not rotated(therefore we don't need trigonometry)
-                        // 900 is the screen size
-                        if (position[1] - sizeY < 1) {
-                            // orientation 0 and is less than 1 cm to the wall.
-                            return false;
-                        } else {
-                                // There is more than 1 pixel gap
-                                this.position[1] -= speed;
-                                return true;
+                        if (sizeX <= sizeY) {
+                            // If robot is rotated
+                            if (rightMostX > 900 - 10) {
+                                rotateAgainstWall(direction);
+                                return false;
+                            } else {
+                                System.out.println("MovingRight");
+                                this.position[0] += speed;
                             }
-                    } else {
-                        // If robot is not rotated(therefore we don't need trigonometry)
-                        // 900 is the screen size
-                        if (position[1] - sizeX < 1) {
-                            // orientation 0 and is less than 1 cm to the wall.
-                            return false;
                         } else {
-                            // There is more than 1 pixel gap
-                            this.position[1] -= speed;
-                            return true;
+                            if (rightMostX > 900 + 10) {
+                                rotateAgainstWall(direction);
+                                return false;
+                            } else {
+                                System.out.println("MovingRight");
+                                this.position[0] += speed;
+                            }
                         }
                     }
-                } else {
-                    if (sizeX <= sizeY) {
-                        // If robot is rotated
-                        if (upMostY < 0) {
-                            rotateAgainstWall(direction);
-                            return false;
-                        } else {
-                            this.position[1] -= speed;
-                        }
+                    break;
                     }
-                    else {
-                        // If robot is rotated
-                        if (upMostY < 10) {
-                            rotateAgainstWall(direction);
-                            return false;
+                    case 3:
+                        if (orientation % 90 == 0) {
+                            if ((orientation / 90) % 2 == 0) {
+                                // If robot is not rotated(therefore we don't need trigonometry)
+                                // 900 is the screen size
+                                if (position[1] - sizeY < 1) {
+                                    // orientation 0 and is less than 1 cm to the wall.
+                                    return false;
+                                } else {
+                                    // There is more than 1 pixel gap
+                                    this.position[1] -= speed;
+                                    return true;
+                                }
+                            } else {
+                                // If robot is not rotated(therefore we don't need trigonometry)
+                                // 900 is the screen size
+                                if (position[1] - sizeX < 1) {
+                                    // orientation 0 and is less than 1 cm to the wall.
+                                    return false;
+                                } else {
+                                    // There is more than 1 pixel gap
+                                    this.position[1] -= speed;
+                                    return true;
+                                }
+                            }
                         } else {
-                            this.position[1] -= speed;
+                            if (sizeX <= sizeY) {
+                                // If robot is rotated
+                                if (upMostY < 0) {
+                                    rotateAgainstWall(direction);
+                                    return false;
+                                } else {
+                                    this.position[1] -= speed;
+                                }
+                            } else {
+                                // If robot is rotated
+                                if (upMostY < 10) {
+                                    rotateAgainstWall(direction);
+                                    return false;
+                                } else {
+                                    this.position[1] -= speed;
+                                }
+                            }
                         }
-                    }
+                        break;
+                    case 4:
+                        if (orientation % 90 == 0) {
+                            if ((orientation / 90) % 2 == 0) {
+                                // If robot is not rotated(therefore we don't need trigonometry)
+                                // 900 is the screen size
+                                if (900 - position[1] - sizeY < 1) {
+                                    // orientation 0 and is less than 1 cm to the wall.
+                                    return false;
+                                } else {
+                                    // There is more than 1 pixel gap
+                                    this.position[1] += speed;
+                                    return true;
+                                }
+                            } else {
+                                // If robot is not rotated(therefore we don't need trigonometry)
+                                // 900 is the screen size
+                                if (900 - position[1] - sizeX < 1) {
+                                    // orientation 0 and is less than 1 cm to the wall.
+                                    return false;
+                                } else {
+                                    // There is more than 1 pixel gap
+                                    this.position[1] += speed;
+                                    return true;
+                                }
+                            }
+                        } else {
+                            if (sizeX <= sizeY) {
+                                // If robot is rotated
+                                if (downMostY > 900) {
+                                    rotateAgainstWall(direction);
+                                    return false;
+                                } else {
+                                    System.out.println(downMostY);
+                                    this.position[1] += speed;
+                                }
+                            } else {
+                                // If robot is rotated
+                                if (downMostY > 900 - 10) {
+                                    rotateAgainstWall(direction);
+                                    return false;
+                                } else {
+                                    System.out.println(downMostY);
+                                    this.position[1] += speed;
+                                }
+                            }
+                        }
+                    default:
+                        return false;
                 }
-                break;
-            case 4:
-                if (orientation % 90 == 0) {
-                    if ((orientation / 90) % 2 == 0) {
-                        // If robot is not rotated(therefore we don't need trigonometry)
-                        // 900 is the screen size
-                        if (900 - position[1] - sizeY < 1) {
-                            // orientation 0 and is less than 1 cm to the wall.
-                            return false;
-                        } else {
-                            // There is more than 1 pixel gap
-                            this.position[1] += speed;
-                            return true;
-                        }
-                    } else {
-                        // If robot is not rotated(therefore we don't need trigonometry)
-                        // 900 is the screen size
-                        if (900 - position[1] - sizeX < 1) {
-                            // orientation 0 and is less than 1 cm to the wall.
-                            return false;
-                        } else {
-                            // There is more than 1 pixel gap
-                            this.position[1] += speed;
-                            return true;
-                        }
-                    }
-                } else {
-                    if (sizeX <= sizeY) {
-                        // If robot is rotated
-                        if (downMostY > 900) {
-                            rotateAgainstWall(direction);
-                            return false;
-                        } else {
-                            System.out.println(downMostY);
-                            this.position[1] += speed;
-                        }
-                    }
-                    else {
-                        // If robot is rotated
-                        if (downMostY > 900 - 10) {
-                            rotateAgainstWall(direction);
-                            return false;
-                        } else {
-                            System.out.println(downMostY);
-                            this.position[1] += speed;
-                        }
-                    }
-                }
-            default:
                 return false;
         }
-        return false;
-    }
 
-    public boolean rotateAgainstWall(int direction) {
-        if (this.orientation % 90 > 45) {
-            if (orientation % 90 != 0) {
-                this.orientation++;
+        public boolean rotateAgainstWall (int direction){
+            if (this.orientation % 90 > 45) {
+                if (orientation % 90 != 0) {
+                    this.orientation++;
+                }
+            } else {
+                if (orientation % 90 != 0) {
+                    this.orientation--;
+                }
             }
-        } else {
-            if (orientation % 90 != 0) {
-                this.orientation--;
-            }
+            this.move(direction);
+            return true;
         }
-        this.move(direction);
-        return true;
     }
-}
