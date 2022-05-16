@@ -133,6 +133,15 @@ public class Robot {
                             }
                     }
                 } else {
+<<<<<<< HEAD
+                    // If robot is rotated
+                    if (rightMostX > 900) {
+                        rotateAgainstWall(direction);
+                        return false;
+                    } else {
+                        System.out.println(position[0]);
+                        this.position[0] += speed;
+=======
                     if (sizeX <= sizeY) {
                         // If robot is rotated
                         if (rightMostX > 900 - 10) {
@@ -151,6 +160,7 @@ public class Robot {
                             System.out.println("MovingRight");
                             this.position[0] += speed;
                         }
+>>>>>>> 86339a7c32865ce474128f142ceedb356790d990
                     }
                 }
                 break;
