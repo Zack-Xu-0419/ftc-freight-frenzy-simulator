@@ -45,7 +45,11 @@ public class Robot {
     }
 
     public boolean move(int direction) {
-
+        if(position[0] > 100-sizeX && position[0] < 800 + sizeX){
+            if(position[1] > 275- sizeY && position[1] < 325 + sizeY){
+                speed = 1;
+            }
+        }
         // The input 'direction': 1-left, 2-right, 3-up, 4-down
 
         // Return 0 if robot is completely against the wall
@@ -254,6 +258,9 @@ public class Robot {
                 default:
                     return false;
         }
+
+        //barrer
+        
         return false;
     }
 
