@@ -40,13 +40,13 @@ public class Drawer {
         }
 
         // draw barer
-        g.drawRect(150, 150, 900, 50);
-        g.drawRect(350, 150, 225, 50);
-        g.drawRect(750, 150, 225, 50);
+        g.drawRect(100, 275, 700, 50);
+        g.drawRect(275, 100, 50, 175);
+        g.drawRect(575, 100, 50, 175);
 
         // draw hubs
         g.setColor(Color.gray);
-        g.fillOval(525, 125, 150, 150);
-        g.fillOval(325, 725, 150, 150);
+        g.fillOval(400, 100, 100, 100);
+        g.fillOval(250, 475, 100, 100);
     }
 }
