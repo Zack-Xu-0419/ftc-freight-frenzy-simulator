@@ -16,7 +16,6 @@ public class Drawer {
     }
 
     public static void drawField(Graphics g, Field field) {
-        Graphics2D g2D = (Graphics2D) g;
         g.setColor(Color.BLACK);
         // draw edge of square and grid
         g.drawRect(0, 0, field.size, field.size);
@@ -26,8 +25,8 @@ public class Drawer {
         }
 
         // draw the carosel
-        g.fillOval(-1 * field.robotAreaSize / 2, field.size - field.robotAreaSize / 2, field.robotAreaSize / 2,
-                field.robotAreaSize / 2);
+        g.fillOval(-field.robotAreaSize / 2, field.size - field.robotAreaSize / 2, field.robotAreaSize,
+                field.robotAreaSize);
 
         // draw game elements
         for (Ball ball : field.balls) {
@@ -41,7 +40,7 @@ public class Drawer {
         }
 
         // draw barer
-        g.drawRect(150, 150, 50, 900);
+        g.drawRect(150, 150, 900, 50);
         g.drawRect(350, 150, 225, 50);
         g.drawRect(750, 150, 225, 50);
 
