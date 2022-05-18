@@ -14,7 +14,7 @@ public class Drawer {
         g2D.rotate(Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
         g2D.fillPolygon(new int[] { leftX, leftX, rightX, rightX }, new int[] { upperY, lowerY, lowerY, upperY }, 4);
         
-        if(robot.slideExtended()){
+        if(robot.slideExtended){
             g2D.drawLine(robot.getPosition()[0], robot.getPosition()[1],
                     robot.getPosition()[0] + robot.getSizeX() + robot.getSlideLength(),
                     robot.getPosition()[1]);

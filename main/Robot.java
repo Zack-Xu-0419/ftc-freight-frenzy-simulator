@@ -5,6 +5,9 @@ public class Robot {
     private int orientation = 0; // Degree of rotation. 0 means Slide is facing to the other alliance
     private int speed = 5;
     private int slideLength = 50;
+    private int oldX = 0;
+    private int oldY = 0;
+    public boolean slideExtended = false;
 
     Robot() {
 
@@ -14,6 +17,8 @@ public class Robot {
         this.position[0] = positionX;
         this.position[1] = positionY;
     }
+
+
 
     public void setSizeX(int sizeX) {
         this.sizeX = sizeX;
@@ -49,12 +54,14 @@ public class Robot {
     }
 
     public boolean move(int direction) {
+
         speed = 5;
         if (position[0] > 100 - sizeX && position[0] < 800 + sizeX) {
             if (position[1] > 275 - sizeY && position[1] < 325 + sizeY) {
                 speed = 1;
             }
         }
+
         // The input 'direction': 1-left, 2-right, 3-up, 4-down
 
         // Return 0 if robot is completely against the wall
@@ -71,6 +78,16 @@ public class Robot {
                 - Math.abs((Math.sqrt(2) * sizeY) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
         double downMostY = position[1]
                 + Math.abs((Math.sqrt(2) * sizeY) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
+
+        if (position[0] - sizeX < (int) (75./2 * Math.sqrt(2)) && position[1] + sizeY > (int) (900 - 75./2 * Math.sqrt(2))) {
+            position[0] = oldX;
+            position[1] = oldY;
+        }
+        if ((position[0] - sizeX < (int) (75./2 * Math.sqrt(2)) && position[1] + sizeY > (int) (900 - 75./2 * Math.sqrt(2)))
+           || (position[0] - sizeX < (int) (75./2 * Math.sqrt(2)) && position[1] + sizeY > (int) (900 - 75./2 * Math.sqrt(2))))
+
+        oldX = position[0];
+        oldY = position[1];
 
         switch (direction) {
             case 1:
