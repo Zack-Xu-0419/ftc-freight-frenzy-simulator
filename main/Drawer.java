@@ -1,6 +1,7 @@
 import java.awt.*;
 
 import GameElements.*;
+import StationaryElements.AllianceHub;
 
 public class Drawer {
     public static void drawRobot(Graphics g, Robot robot) {
@@ -12,14 +13,13 @@ public class Drawer {
         int lowerY = robot.getPosition()[1] + robot.getSizeY();
         g2D.rotate(Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
         g2D.fillPolygon(new int[] { leftX, leftX, rightX, rightX }, new int[] { upperY, lowerY, lowerY, upperY }, 4);
-        g2D.drawLine(robot.getPosition()[0], robot.getPosition()[1],
-                robot.getPosition()[0] + robot.getSizeX() + robot.getSlideLength(),
-                robot.getPosition()[1]);
+        
+        if(robot.slideExtended()){
+            g2D.drawLine(robot.getPosition()[0], robot.getPosition()[1],
+                    robot.getPosition()[0] + robot.getSizeX() + robot.getSlideLength(),
+                    robot.getPosition()[1]);
+        }
 
-        System.out.println(robot.getPosition()[0]);
-        System.out.println(robot.getPosition()[1]);
-        System.out.println(robot.getPosition()[0] + 50);
-        System.out.println(robot.getPosition()[1]);
 
         g2D.rotate(-1 * Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
     }
@@ -57,5 +57,12 @@ public class Drawer {
         g.setColor(Color.gray);
         g.fillOval(400, 100, 100, 100);
         g.fillOval(250, 475, 100, 100);
+    }
+    public static void drawScore(Graphics g, Field field) {
+        g.setColor(Color.BLACK);
+        int allianceScore = Scoring.score(field.allianceHub);
+        int sharedScore = Scoring.score((field.sharedHub));
+        g.drawString("Alliance Hub: " + allianceScore, 975, 50);
+        g.drawString("Shared Hub: " + sharedScore, 975, 100);
     }
 }
