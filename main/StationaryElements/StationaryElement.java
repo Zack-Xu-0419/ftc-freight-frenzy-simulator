@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class StationaryElement {
 
     public ArrayList<ArrayList<GameElement>> elements = new ArrayList<>();
+    //recored the position of the element
     protected int x;
     protected int y;
 

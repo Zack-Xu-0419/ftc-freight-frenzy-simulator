@@ -7,20 +7,22 @@ public class Drawer {
     public static void drawRobot(Graphics g, Robot robot) {
         Graphics2D g2D = (Graphics2D) g;
         g2D.setColor(Color.BLACK);
+        //get postion of four corners
         int leftX = robot.getPosition()[0] - robot.getSizeX();
         int rightX = robot.getPosition()[0] + robot.getSizeX();
         int upperY = robot.getPosition()[1] - robot.getSizeY();
         int lowerY = robot.getPosition()[1] + robot.getSizeY();
+        //rotate the corner and draw the robot
         g2D.rotate(Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
         g2D.fillPolygon(new int[] { leftX, leftX, rightX, rightX }, new int[] { upperY, lowerY, lowerY, upperY }, 4);
-        
+        //draw the slide
         if(robot.slideExtended){
             g2D.drawLine(robot.getPosition()[0], robot.getPosition()[1],
                     robot.getPosition()[0] + robot.getSizeX() + robot.getSlideLength(),
                     robot.getPosition()[1]);
         }
 
-
+        //rotate back the graphic so that next time it be stadard direction, this will not affect previous drawing
         g2D.rotate(-1 * Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
     }
 
@@ -58,6 +60,8 @@ public class Drawer {
         g.fillOval(400, 100, 100, 100);
         g.fillOval(250, 475, 100, 100);
     }
+
+    //draw the scoring board
     public static void drawScore(Graphics g, Field field) {
         g.setColor(Color.BLACK);
         int allianceScore = Scoring.score(field.allianceHub);

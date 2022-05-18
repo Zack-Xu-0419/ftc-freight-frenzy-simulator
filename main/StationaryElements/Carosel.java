@@ -9,7 +9,7 @@ public class Carosel extends StationaryElement {
     public Carosel(int x, int y) {
         super(x, y);
     }
-
+    
     public void removeDuck() {
         if (numDuck > 0) {
             numDuck--;
