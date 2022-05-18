@@ -39,10 +39,10 @@ public class Drawer {
 
         // draw game elements
         for (Ball ball : field.balls) {
-            g.drawOval(ball.getX() - 10, ball.getY(), 10, 10);
+            g.drawOval(ball.getX(), ball.getY(), 10, 10);
         }
         for (Cube cube : field.cubes) {
-            g.drawOval(cube.getX() - 10, cube.getY(), 10, 10);
+            g.drawOval(cube.getX(), cube.getY(), 10, 10);
         }
         /*for (Duck duck : field.ducks) {
             g.drawOval(duck.getX() - 10, duck.getY(), 20, 20);

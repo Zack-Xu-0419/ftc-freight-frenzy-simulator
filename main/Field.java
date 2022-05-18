@@ -5,16 +5,16 @@ public class Field {
     int numOfDuck = 10;
     int numOfCube = 28;
     int numOfBall = 20;
-    int x_alliance;
-    int y_allianceHub;
+    int x_allianceHub = 100;
+    int y_allianceHub = 400;
     int x_carosel;
     int y_carosel;
-    int x_sharedHub;
-    int y_sharedHub;
+    int x_sharedHub = 200;
+    int y_sharedHub = 500;
     public Ball[] balls = new Ball[numOfBall];
     public Cube[] cubes = new Cube[numOfCube];
     public Duck[] ducks = new Duck[numOfDuck];
-    public AllianceHub allianceHub = new AllianceHub(x_alliance, y_allianceHub);
+    public AllianceHub allianceHub = new AllianceHub(x_allianceHub, y_allianceHub);
     public Carosel carosel = new Carosel(x_carosel, y_carosel);
     public SharedHub sharedHub = new SharedHub(x_sharedHub, y_sharedHub);
     public final int size = 900;
@@ -25,8 +25,8 @@ public class Field {
         for(int i = 0; i < numOfBall; i++){
             int x, y;
             do{
-                x = (int) (Math.random() * robotAreaSize);
-                y = (int) (Math.random() * robotAreaSize);
+                x = (int) (Math.random() * (robotAreaSize - 10));
+                y = (int) (Math.random() * (robotAreaSize - 10));
             }while(!check(x, y));
             balls[i] = new Ball(x, y);
 
@@ -35,8 +35,8 @@ public class Field {
         for(int i = 0; i < numOfCube; i++){
             int x, y;
             do{
-                x = (int) (Math.random() * robotAreaSize);
-                y = (int) (Math.random() * robotAreaSize);
+                x = (int) (Math.random() * (robotAreaSize - 10));
+                y = (int) (Math.random() * (robotAreaSize - 10));
             }while(!check(x, y));
             if (i < 13) {
                 cubes[i] = new Cube(x, y, 2);
@@ -65,20 +65,20 @@ public class Field {
     //check whether this radom point has something on it
     private boolean check(int x, int y){
         for(int i = 0; i < numOfBall && balls[i] != null; i++){
-            if(x == balls[i].getX() && y == balls[i].getY()){
+            if(x > balls[i].getX() - 10 && x < balls[i].getX() + 10 && y > balls[i].getY() - 10 && y < balls[i].getY() + 10){
                 return false;
             }
         }
         for(int i = 0; i < numOfCube && cubes[i] != null; i++){
-            if(x == cubes[i].getX() && y == cubes[i].getY()){
+            if(x > cubes[i].getX() - 10 && x < cubes[i].getX() + 10 && y > cubes[i].getY() - 10 && y < cubes[i].getY() + 10){
                 return false;
             }
         }
-        for(int i = 0; i < numOfDuck && ducks[i] != null; i++){
-            if(x == ducks[i].getX() && y == ducks[i].getY()){
+        /*for(int i = 0; i < numOfDuck && ducks[i] != null; i++){
+            if(x > ducks[i].getX() - 10 && y == ducks[i].getY()){
                 return false;
             }
-        }
+        }*/
         return true;
     }
     public boolean move(int from_x, int from_y, int to_x, int to_y){
