@@ -4,7 +4,7 @@ import StationaryElements.SharedHub;
 import StationaryElements.StationaryElement;
 
 public class Scoring {
-
+    //count the scoring for given stationary element
     public static int score(StationaryElement stationaryElement) {
         int score = 0;
         if (stationaryElement instanceof Carosel) {
