@@ -17,6 +17,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         super.paintComponent(g);
         Drawer.drawField(g, field);
         Drawer.drawRobot(g, robot);
+        Drawer.drawScore(g, field);
     }
 
     public DrawingTest() {
