@@ -1,16 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.Key;
 
 public class DrawingTest extends JPanel implements MouseListener {
 
     static Field field = new Field();
     static Robot robot = new Robot();
+
+    // Flags for handling multiple key presses at the same time
     static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
             rotateLeft = false, rotateRight = false;
     static int currentOrientation;
 
+    // This variable is required for window focusing for keyboard detection
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
     public void paintComponent(Graphics g) {
@@ -20,21 +22,30 @@ public class DrawingTest extends JPanel implements MouseListener {
     }
 
     public DrawingTest() {
+        // Sets focus onto the window
         setFocusable(true);
         requestFocus();
         requestFocusInWindow();
         addMouseListener(this);
 
+        // Keybinds for robot movement. These listen for key presses.
+
+        // You first get the input in this step, which gets the key, and then you set that
+        // key press to an action key, which is the last string.
+
+        // Keybind for when a keyboard key corresponding to movement is pressed.
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "UP_PRESSED");
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), "DOWN_PRESSED");
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "LEFT_PRESSED");
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "RIGHT_PRESSED");
 
+        // Then, you set the action key to an action initialized in this file
         getActionMap().put("UP_PRESSED", new PressMoveAction("UP"));
         getActionMap().put("DOWN_PRESSED", new PressMoveAction("DOWN"));
         getActionMap().put("LEFT_PRESSED", new PressMoveAction("LEFT"));
         getActionMap().put("RIGHT_PRESSED", new PressMoveAction("RIGHT"));
 
+        // Keybind for when a keyboard key corresponding to movement is released.
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true), "UP_RELEASED");
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true), "DOWN_RELEASED");
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), "LEFT_RELEASED");
@@ -45,18 +56,21 @@ public class DrawingTest extends JPanel implements MouseListener {
         getActionMap().put("LEFT_RELEASED", new ReleaseMoveAction("LEFT"));
         getActionMap().put("RIGHT_RELEASED", new ReleaseMoveAction("RIGHT"));
 
+        // Keybind for when a keyboard key corresponding to rotation is pressed.
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "RLEFT_PRESSED");
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "RRIGHT_PRESSED");
 
         getActionMap().put("RLEFT_PRESSED", new PressRotateAction("LEFT"));
         getActionMap().put("RRIGHT_PRESSED", new PressRotateAction("RIGHT"));
 
+        // Keybind for when a keyboard key corresponding to rotation is released.
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "RLEFT_RELEASED");
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "RRIGHT_RELEASED");
 
         getActionMap().put("RLEFT_RELEASED", new ReleaseRotateAction("LEFT"));
         getActionMap().put("RRIGHT_RELEASED", new ReleaseRotateAction("RIGHT"));
 
+        // Keybinds for when a keyboard key corresponding to slide extension is pressed
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "SLIDE_EXTENDED");
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "SLIDE_RETRACTED");
 
