@@ -50,7 +50,7 @@ public class Field {
             
         }
 
-        for(int i = 0; i < numOfDuck; i++){
+        /*for(int i = 0; i < numOfDuck; i++){
             int x, y;
             do{
                 x = (int) (Math.random() * robotAreaSize);
@@ -58,7 +58,7 @@ public class Field {
             }while(!check(x, y));
             ducks[i] = new Duck(x, y);
             
-        }
+        }*/
     }
 
 
