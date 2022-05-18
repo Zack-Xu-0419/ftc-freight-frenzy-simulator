@@ -1,8 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.security.Key;
 
-public class DrawingTest extends JPanel implements MouseListener, KeyListener {
+public class DrawingTest extends JPanel implements MouseListener {
 
     static Field field = new Field();
     static Robot robot = new Robot();
@@ -55,6 +56,12 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
 
         getActionMap().put("RLEFT_RELEASED", new ReleaseRotateAction("LEFT"));
         getActionMap().put("RRIGHT_RELEASED", new ReleaseRotateAction("RIGHT"));
+
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "SLIDE_EXTENDED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "SLIDE_RETRACTED");
+
+        getActionMap().put("SLIDE_EXTENDED", new SlideExtendAction(true));
+        getActionMap().put("SLIDE_RETRACTED", new SlideExtendAction(false));
     }
 
     public static void main(String[] args) {
@@ -93,42 +100,6 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
         System.out.println("" + p.x + ", " + p.y);
     }
 
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    public void keyReleased(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent event) {
-
-        int k = event.getKeyCode();
-
-        if (k == 38) {
-            // Up
-            robot.move(3);
-        }
-        if (k == KeyEvent.VK_DOWN) {
-            // Down
-            robot.move(4);
-        }
-        if (k == 37) {
-            // Left
-            robot.move(1);
-        }
-        if (k == 39) {
-            // Right
-            robot.move(2);
-        }
-
-        if (event.getKeyCode() == KeyEvent.VK_HOME) {
-
-            System.out.println("Key codes: " + event.getKeyCode());
-
-        }
-    }
 
     public class PressMoveAction extends AbstractAction {
 
@@ -224,6 +195,24 @@ public class DrawingTest extends JPanel implements MouseListener, KeyListener {
                 case "RIGHT":
                     rotateRight = false;
                     break;
+            }
+        }
+    }
+
+    public class SlideExtendAction extends AbstractAction {
+
+        boolean isSlideExtended;
+        SlideExtendAction(boolean isSlideExtended) {
+            this.isSlideExtended = isSlideExtended;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (isSlideExtended) {
+                robot.slideExtended = true;
+            }
+            else {
+                robot.slideExtended = false;
             }
         }
     }
