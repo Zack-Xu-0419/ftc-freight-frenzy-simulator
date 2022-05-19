@@ -1,3 +1,4 @@
+
 public class Robot {
     private int position[] = { 0, 0 };
     private int sizeX = 50; // Pixel Size from center of the robot to the edge
@@ -52,6 +53,13 @@ public class Robot {
     public void setSize(int sizeX, int sizeY) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
+    }
+
+    public int[] getPositionAtSlideEnd() {
+        int[] result = {
+                (int) (this.getPosition()[0] - Math.sin(Math.toRadians(orientation)) * (slideLength + this.sizeX)),
+                (int) (this.getPosition()[1] + Math.cos(Math.toRadians(orientation)) * (slideLength + this.sizeY)) };
+        return result;
     }
 
     public boolean move(int direction) {

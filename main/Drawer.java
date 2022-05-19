@@ -46,6 +46,7 @@ public class Drawer {
         // rotate back the graphic so that next time it be stadard direction, this will
         // not affect previous drawing
         g2D.rotate(-1 * Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
+        g2D.fillOval(robot.getPositionAtSlideEnd()[0], robot.getPositionAtSlideEnd()[1], 5, 5);
     }
 
     public static void drawField(Graphics g, Field field) {
