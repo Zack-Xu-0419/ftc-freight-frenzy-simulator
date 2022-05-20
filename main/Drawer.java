@@ -29,7 +29,7 @@ public class Drawer {
                     robot.getSizeY());
         }
         g2D.setColor(Color.BLUE);
-        if (robot.intakeDownLeft) {
+        if (robot.intakeDownRight) {
             g2D.fillRect(robot.getPosition()[0] + robot.getSizeX() + 20 - (robot.getSizeX() - 20),
                     robot.getPosition()[1] - robot.getSizeY() / 2,
                     robot.getSizeX() - 20,

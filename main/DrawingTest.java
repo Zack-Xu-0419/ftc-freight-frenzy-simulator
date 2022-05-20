@@ -12,6 +12,11 @@ public class DrawingTest extends JPanel implements MouseListener {
             rotateLeft = false, rotateRight = false;
     static int currentOrientation;
 
+    static int rIntakeCounter = 0;
+    static int bIntakeCounter = 0;
+    static int slideModeCounter = 0;
+    static boolean slideManualMode = false;
+
     // This variable is required for window focusing for keyboard detection
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
@@ -77,6 +82,18 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         getActionMap().put("SLIDE_EXTENDED", new SlideExtendAction(true));
         getActionMap().put("SLIDE_RETRACTED", new SlideExtendAction(false));
+
+        // Keybinds for when a keyboard key corresponding to intakes is pressed
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0, true), "R_INTAKE");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_E, 0, true), "B_INTAKE");
+
+        getActionMap().put("R_INTAKE", new RedIntakeAction());
+        getActionMap().put("B_INTAKE", new BlueIntakeAction());
+
+        // Keybinds for manual slide extension mode
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0, true), "SLIDE_MODE");
+
+        getActionMap().put("SLIDE_MODE", new RedIntakeAction());
     }
 
     public static void main(String[] args) {
@@ -216,18 +233,64 @@ public class DrawingTest extends JPanel implements MouseListener {
 
     public class SlideExtendAction extends AbstractAction {
 
-        boolean isSlideExtended;
-        SlideExtendAction(boolean isSlideExtended) {
-            this.isSlideExtended = isSlideExtended;
+        // True - extend; False - retract
+        boolean extendOrRetract;
+        SlideExtendAction(boolean extendOrRetract) {
+            this.extendOrRetract = extendOrRetract;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (isSlideExtended) {
+            if (extendOrRetract) {
                 robot.slideExtended = true;
             }
             else {
                 robot.slideExtended = false;
+            }
+        }
+    }
+
+    public class SlideModeAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (slideModeCounter == 0) {
+                slideManualMode = true;
+                slideModeCounter++;
+            }
+            else {
+                slideManualMode = false;
+                slideModeCounter = 0;
+            }
+        }
+    }
+
+    public class RedIntakeAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (rIntakeCounter == 0) {
+                robot.intakeDownLeft = true;
+                rIntakeCounter++;
+            }
+            else {
+                robot.intakeDownLeft = false;
+                rIntakeCounter = 0;
+            }
+        }
+    }
+
+    public class BlueIntakeAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (bIntakeCounter == 0) {
+                robot.intakeDownRight = true;
+                bIntakeCounter++;
+            }
+            else {
+                robot.intakeDownRight = false;
+                bIntakeCounter = 0;
             }
         }
     }
