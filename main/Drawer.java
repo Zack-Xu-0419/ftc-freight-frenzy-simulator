@@ -11,15 +11,19 @@ public class Drawer {
         int rightX = robot.getPosition()[0] + robot.getSizeX();
         int upperY = robot.getPosition()[1] - robot.getSizeY();
         int lowerY = robot.getPosition()[1] + robot.getSizeY();
+        Stroke originalStroke = g2D.getStroke();
         // rotate the corner and draw the robot
         g2D.rotate(Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
         g2D.fillPolygon(new int[] { leftX, leftX, rightX, rightX }, new int[] { upperY, lowerY, lowerY, upperY }, 4);
         // draw the slide
-        if (robot.slideExtended || robot.getCurrentSlideLength() != 0) {
-            g2D.drawLine(robot.getPosition()[0], robot.getPosition()[1],
-                    robot.getPosition()[0],
-                    robot.getPosition()[1] + robot.getSizeX() + robot.getCurrentSlideLength());
-        }
+        g2D.setStroke(new BasicStroke(3));
+        g2D.setColor(Color.LIGHT_GRAY);
+        g2D.drawLine(robot.getPosition()[0], robot.getPosition()[1],
+                robot.getPosition()[0],
+                robot.getPosition()[1] + robot.getSizeX() + robot.getCurrentSlideLength());
+        g2D.setStroke(originalStroke);
+        g2D.setColor(Color.BLACK);
+
         // Draw intake left
         g2D.setColor(Color.RED);
         if (robot.intakeDownLeft) {

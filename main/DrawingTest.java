@@ -247,21 +247,16 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!slideManualMode) {
-                if (extendOrRetract) {
-                    robot.slideExtended = true;
-                    robot.setCurrentSlideLength(robot.getMaxSlideLength());
-                } else {
-                    robot.slideExtended = false;
-                    robot.setCurrentSlideLength(0);
+            if (extendOrRetract) {
+                extendingSlide = true;
+                if (retractingSlide) {
+                    retractingSlide = false;
                 }
             }
             else {
-                if (extendOrRetract) {
-                    extendingSlide = true;
-                }
-                else {
-                    retractingSlide = true;
+                retractingSlide = true;
+                if (extendingSlide) {
+                    extendingSlide = false;
                 }
             }
         }
@@ -277,11 +272,12 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (extendOrRetract) {
-                extendingSlide = false;
-            }
-            else {
-                retractingSlide = false;
+            if (slideManualMode) {
+                if (extendOrRetract) {
+                    extendingSlide = false;
+                } else {
+                    retractingSlide = false;
+                }
             }
         }
     }
@@ -298,6 +294,8 @@ public class DrawingTest extends JPanel implements MouseListener {
                 slideManualMode = false;
                 slideModeCounter = 0;
             }
+            extendingSlide = false;
+            retractingSlide = false;
         }
     }
 
@@ -350,22 +348,24 @@ public class DrawingTest extends JPanel implements MouseListener {
                             robot.move(2);
                         }
                         if (rotateLeft) {
-                            currentOrientation = (currentOrientation + 5) % 360;
+                            currentOrientation = (currentOrientation + 3) % 360;
                             robot.setOrientation(currentOrientation);
                         }
                         if (rotateRight) {
-                            currentOrientation = (currentOrientation) - 5 % 360;
+                            currentOrientation = (currentOrientation) - 3 % 360;
                             if (currentOrientation < 0) {
                                 currentOrientation = 360 + currentOrientation;
                             }
                             robot.setOrientation(currentOrientation);
                         }
                         if (extendingSlide) {
+                            robot.slideExtended = true;
                             if (robot.getCurrentSlideLength() + 5 <= robot.getMaxSlideLength()) {
                                 robot.setCurrentSlideLength(robot.getCurrentSlideLength() + 5);
                             }
                             else {
                                 robot.setCurrentSlideLength(robot.getMaxSlideLength());
+                                extendingSlide = false;
                             }
                         }
                         if (retractingSlide) {
@@ -374,6 +374,8 @@ public class DrawingTest extends JPanel implements MouseListener {
                             }
                             else {
                                 robot.setCurrentSlideLength(0);
+                                retractingSlide = false;
+                                robot.slideExtended = false;
                             }
                         }
                         // 60 FPS
