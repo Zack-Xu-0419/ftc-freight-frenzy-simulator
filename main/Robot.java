@@ -5,7 +5,8 @@ public class Robot {
     private int sizeY = 50; // Pixel Size from center of the robot to the edge
     private int orientation = 0; // Degree of rotation. 0 means Slide is facing to the other alliance
     private int speed = 5;
-    private int slideLength = 400;
+    private int maxSlideLength = 400;
+    private int currentSlideLength = 0;
     private int oldX = 0;
     private int oldY = 0;
     public boolean slideExtended = false;
@@ -26,8 +27,16 @@ public class Robot {
         this.sizeX = sizeX;
     }
 
-    public int getSlideLength() {
-        return slideLength;
+    public int getMaxSlideLength() {
+        return maxSlideLength;
+    }
+
+    public int getCurrentSlideLength() {
+        return currentSlideLength;
+    }
+
+    public void setCurrentSlideLength(int newSlideLength) {
+        currentSlideLength = newSlideLength;
     }
 
     public int[] getPosition() {
@@ -57,8 +66,8 @@ public class Robot {
 
     public int[] getPositionAtSlideEnd() {
         int[] result = {
-                (int) (this.getPosition()[0] - Math.sin(Math.toRadians(orientation)) * (slideLength + this.sizeX)),
-                (int) (this.getPosition()[1] + Math.cos(Math.toRadians(orientation)) * (slideLength + this.sizeY)) };
+                (int) (this.getPosition()[0] - Math.sin(Math.toRadians(orientation)) * (currentSlideLength + this.sizeX)),
+                (int) (this.getPosition()[1] + Math.cos(Math.toRadians(orientation)) * (currentSlideLength + this.sizeY)) };
         return result;
     }
 

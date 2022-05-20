@@ -9,7 +9,7 @@ public class DrawingTest extends JPanel implements MouseListener {
 
     // Flags for handling multiple key presses at the same time
     static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
-            rotateLeft = false, rotateRight = false;
+            rotateLeft = false, rotateRight = false, extendingSlide = false, retractingSlide = false;
     static int currentOrientation;
 
     static int rIntakeCounter = 0;
@@ -77,11 +77,17 @@ public class DrawingTest extends JPanel implements MouseListener {
         getActionMap().put("RRIGHT_RELEASED", new ReleaseRotateAction("RIGHT"));
 
         // Keybinds for when a keyboard key corresponding to slide extension is pressed
-        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "SLIDE_EXTENDED");
-        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "SLIDE_RETRACTED");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "SLIDE_EXTENDED_PRESS");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), "SLIDE_RETRACTED_PRESS");
 
-        getActionMap().put("SLIDE_EXTENDED", new SlideExtendAction(true));
-        getActionMap().put("SLIDE_RETRACTED", new SlideExtendAction(false));
+        getActionMap().put("SLIDE_EXTENDED_PRESS", new SlidePressAction(true));
+        getActionMap().put("SLIDE_RETRACTED_PRESS", new SlidePressAction(false));
+
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "SLIDE_EXTENDED_RELEASE");
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true), "SLIDE_RETRACTED_RELEASE");
+
+        getActionMap().put("SLIDE_EXTENDED_RELEASE", new SlideReleaseAction(true));
+        getActionMap().put("SLIDE_RETRACTED_RELEASE", new SlideReleaseAction(false));
 
         // Keybinds for when a keyboard key corresponding to intakes is pressed
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0, true), "R_INTAKE");
@@ -93,7 +99,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         // Keybinds for manual slide extension mode
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0, true), "SLIDE_MODE");
 
-        getActionMap().put("SLIDE_MODE", new RedIntakeAction());
+        getActionMap().put("SLIDE_MODE", new SlideModeAction());
     }
 
     public static void main(String[] args) {
@@ -231,21 +237,51 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
-    public class SlideExtendAction extends AbstractAction {
+    public class SlidePressAction extends AbstractAction {
 
         // True - extend; False - retract
         boolean extendOrRetract;
-        SlideExtendAction(boolean extendOrRetract) {
+        SlidePressAction(boolean extendOrRetract) {
+            this.extendOrRetract = extendOrRetract;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (!slideManualMode) {
+                if (extendOrRetract) {
+                    robot.slideExtended = true;
+                    robot.setCurrentSlideLength(robot.getMaxSlideLength());
+                } else {
+                    robot.slideExtended = false;
+                    robot.setCurrentSlideLength(0);
+                }
+            }
+            else {
+                if (extendOrRetract) {
+                    extendingSlide = true;
+                }
+                else {
+                    retractingSlide = true;
+                }
+            }
+        }
+    }
+
+    public class SlideReleaseAction extends AbstractAction {
+
+        // True - extend; False - retract
+        boolean extendOrRetract;
+        SlideReleaseAction(boolean extendOrRetract) {
             this.extendOrRetract = extendOrRetract;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             if (extendOrRetract) {
-                robot.slideExtended = true;
+                extendingSlide = false;
             }
             else {
-                robot.slideExtended = false;
+                retractingSlide = false;
             }
         }
     }
@@ -323,6 +359,22 @@ public class DrawingTest extends JPanel implements MouseListener {
                                 currentOrientation = 360 + currentOrientation;
                             }
                             robot.setOrientation(currentOrientation);
+                        }
+                        if (extendingSlide) {
+                            if (robot.getCurrentSlideLength() + 5 <= robot.getMaxSlideLength()) {
+                                robot.setCurrentSlideLength(robot.getCurrentSlideLength() + 5);
+                            }
+                            else {
+                                robot.setCurrentSlideLength(robot.getMaxSlideLength());
+                            }
+                        }
+                        if (retractingSlide) {
+                            if (robot.getCurrentSlideLength() - 5 >= 0) {
+                                robot.setCurrentSlideLength(robot.getCurrentSlideLength() - 5);
+                            }
+                            else {
+                                robot.setCurrentSlideLength(0);
+                            }
                         }
                         // 60 FPS
                         sleep((int) (1000.0 / 60));

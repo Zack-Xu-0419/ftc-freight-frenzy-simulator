@@ -1,7 +1,6 @@
 import java.awt.*;
 
 import GameElements.*;
-import StationaryElements.AllianceHub;
 
 public class Drawer {
     public static void drawRobot(Graphics g, Robot robot) {
@@ -16,10 +15,10 @@ public class Drawer {
         g2D.rotate(Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
         g2D.fillPolygon(new int[] { leftX, leftX, rightX, rightX }, new int[] { upperY, lowerY, lowerY, upperY }, 4);
         // draw the slide
-        if (robot.slideExtended) {
+        if (robot.slideExtended || robot.getCurrentSlideLength() != 0) {
             g2D.drawLine(robot.getPosition()[0], robot.getPosition()[1],
                     robot.getPosition()[0],
-                    robot.getPosition()[1] + robot.getSizeX() + robot.getSlideLength());
+                    robot.getPosition()[1] + robot.getSizeX() + robot.getCurrentSlideLength());
         }
         // Draw intake left
         g2D.setColor(Color.RED);
