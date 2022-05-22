@@ -9,7 +9,8 @@ public class GameElement {
     protected int y;
     protected boolean isPickedUp;
 
-    // The constructor is protected so that no one can create an abstract game element
+    // The constructor is protected so that no one can create an abstract game
+    // element
     protected GameElement(int x, int y, int weight) {
         this.x = x;
         this.y = y;
@@ -29,13 +30,17 @@ public class GameElement {
     }
 
     // Changes the element's position
-    public void move(int x, int y){
+    public void move(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
     public boolean isPickedUp() {
         return isPickedUp;
+    }
+
+    public void setPickedUp(boolean isPickedUp) {
+        this.isPickedUp = isPickedUp;
     }
 
 }

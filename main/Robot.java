@@ -1,3 +1,6 @@
+import javax.lang.model.element.Element;
+
+import GameElements.*;
 
 public class Robot {
     private int position[] = { 0, 0 };
@@ -13,9 +16,64 @@ public class Robot {
     public boolean intakeDownLeft = false;
     public boolean intakeDownRight = false;
     public boolean hasGameElement = false;
+    public int gameElement[] = { 0, 0 };
 
     Robot() {
 
+    }
+
+    public void intake(Field field) {
+        // if intake is down, get the block closest to the robot.
+        if (!this.hasGameElement) {
+            // Go through the elements in the field and calculate distance. If it the center
+            // of the intake is in a certain distance from the elemnt, intake.
+
+            double shortest = 1000;
+            int counter = 0;
+            int smallestIndex = 0;
+            int ballOrCube = 0; // If closest ame element is cube, then it's 1, if ball, 0.
+
+            for (GameElement element : field.balls) {
+                double distanceX = element.getX() - (this.getPosition()[0] - this.sizeX);
+                double distanceY = element.getY() - (this.getPosition()[1] - this.sizeY);
+                double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                if (distance < shortest) {
+                    shortest = distance;
+                    smallestIndex = counter;
+                    ballOrCube = 0;
+                }
+                counter++;
+            }
+
+            shortest = 1000;
+            counter = 0;
+            smallestIndex = 0;
+
+            for (GameElement element : field.cubes) {
+                double distanceX = element.getX() - this.getPosition()[0];
+                double distanceY = element.getY() - this.getPosition()[1];
+                double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                if (distance < shortest) {
+                    shortest = distance;
+                    smallestIndex = counter;
+                    ballOrCube = 1;
+                }
+                counter++;
+            }
+
+            if (shortest < 40) {
+                // After finding out which element to intake, mark the element as "Intaked".
+                field.balls[smallestIndex].setPickedUp(true);
+                // tell robot it has something, along with what it has, and what is the index of
+                // element
+                this.hasGameElement = true;
+                this.gameElement[0] = ballOrCube;
+                this.gameElement[1] = smallestIndex;
+                this.intakeDownLeft = false;
+                this.intakeDownRight = false;
+            }
+
+        }
     }
 
     public void setPosition(int positionX, int positionY) {
@@ -66,9 +124,38 @@ public class Robot {
 
     public int[] getPositionAtSlideEnd() {
         int[] result = {
-                (int) (this.getPosition()[0] - Math.sin(Math.toRadians(orientation)) * (currentSlideLength + this.sizeX)),
-                (int) (this.getPosition()[1] + Math.cos(Math.toRadians(orientation)) * (currentSlideLength + this.sizeY)) };
+                (int) (this.getPosition()[0]
+                        - Math.sin(Math.toRadians(orientation)) * (currentSlideLength + this.sizeX)),
+                (int) (this.getPosition()[1]
+                        + Math.cos(Math.toRadians(orientation)) * (currentSlideLength + this.sizeY)) };
         return result;
+    }
+
+    public void deposit(Field field) {
+        // if deposit position is above the shared shipping hub
+        if (inCarosel(getPositionAtSlideEnd())) {
+            if (this.gameElement[0] == 0) {
+                // if currently has ball
+                field.sharedHub.red.add(field.balls[gameElement[1]]);
+            }
+            if (this.gameElement[0] == 1) {
+                field.sharedHub.red.add(field.cubes[gameElement[1]]);
+            }
+            System.out.print("Added");
+        }
+    }
+
+    public boolean inCarosel(int[] position) {
+        return (position[0] < (int) (75. / 2 * Math.sqrt(2))
+                && position[1] > (int) (900 - 75. / 2 * Math.sqrt(2)))
+                ||
+                // If collide with Shared shipping hub
+                (position[0] > 300 && position[0] < 500
+                        && position[1] > 100 && position[1] < 300)
+                ||
+                // If collide with Alliance shipping hub
+                (position[0] > 150 && position[0] < 350
+                        && position[1] > 475 && position[1] < 675);
     }
 
     public boolean move(int direction) {

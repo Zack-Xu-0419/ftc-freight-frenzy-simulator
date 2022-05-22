@@ -23,7 +23,7 @@ public class DrawingTest extends JPanel implements MouseListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Drawer.drawField(g, field);
-        Drawer.drawRobot(g, robot);
+        Drawer.drawRobot(g, robot, field);
         Drawer.drawScore(g, field);
     }
 
@@ -36,7 +36,8 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         // Keybinds for robot movement. These listen for key presses.
 
-        // You first get the input in this step, which gets the key, and then you set that
+        // You first get the input in this step, which gets the key, and then you set
+        // that
         // key press to an action key, which is the last string.
 
         // Keybind for when a keyboard key corresponding to movement is pressed.
@@ -137,7 +138,6 @@ public class DrawingTest extends JPanel implements MouseListener {
         Point p = e.getPoint();
         System.out.println("" + p.x + ", " + p.y);
     }
-
 
     public class PressMoveAction extends AbstractAction {
 
@@ -241,6 +241,7 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         // True - extend; False - retract
         boolean extendOrRetract;
+
         SlidePressAction(boolean extendOrRetract) {
             this.extendOrRetract = extendOrRetract;
         }
@@ -252,8 +253,7 @@ public class DrawingTest extends JPanel implements MouseListener {
                 if (retractingSlide) {
                     retractingSlide = false;
                 }
-            }
-            else {
+            } else {
                 retractingSlide = true;
                 if (extendingSlide) {
                     extendingSlide = false;
@@ -266,6 +266,7 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         // True - extend; False - retract
         boolean extendOrRetract;
+
         SlideReleaseAction(boolean extendOrRetract) {
             this.extendOrRetract = extendOrRetract;
         }
@@ -289,8 +290,7 @@ public class DrawingTest extends JPanel implements MouseListener {
             if (slideModeCounter == 0) {
                 slideManualMode = true;
                 slideModeCounter++;
-            }
-            else {
+            } else {
                 slideManualMode = false;
                 slideModeCounter = 0;
             }
@@ -306,8 +306,7 @@ public class DrawingTest extends JPanel implements MouseListener {
             if (rIntakeCounter == 0) {
                 robot.intakeDownLeft = true;
                 rIntakeCounter++;
-            }
-            else {
+            } else {
                 robot.intakeDownLeft = false;
                 rIntakeCounter = 0;
             }
@@ -321,8 +320,7 @@ public class DrawingTest extends JPanel implements MouseListener {
             if (bIntakeCounter == 0) {
                 robot.intakeDownRight = true;
                 bIntakeCounter++;
-            }
-            else {
+            } else {
                 robot.intakeDownRight = false;
                 bIntakeCounter = 0;
             }
@@ -362,8 +360,7 @@ public class DrawingTest extends JPanel implements MouseListener {
                             robot.slideExtended = true;
                             if (robot.getCurrentSlideLength() + 5 <= robot.getMaxSlideLength()) {
                                 robot.setCurrentSlideLength(robot.getCurrentSlideLength() + 5);
-                            }
-                            else {
+                            } else {
                                 robot.setCurrentSlideLength(robot.getMaxSlideLength());
                                 extendingSlide = false;
                             }
@@ -371,8 +368,7 @@ public class DrawingTest extends JPanel implements MouseListener {
                         if (retractingSlide) {
                             if (robot.getCurrentSlideLength() - 5 >= 0) {
                                 robot.setCurrentSlideLength(robot.getCurrentSlideLength() - 5);
-                            }
-                            else {
+                            } else {
                                 robot.setCurrentSlideLength(0);
                                 retractingSlide = false;
                                 robot.slideExtended = false;

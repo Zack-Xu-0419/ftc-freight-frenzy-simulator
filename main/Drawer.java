@@ -3,7 +3,7 @@ import java.awt.*;
 import GameElements.*;
 
 public class Drawer {
-    public static void drawRobot(Graphics g, Robot robot) {
+    public static void drawRobot(Graphics g, Robot robot, Field field) {
         Graphics2D g2D = (Graphics2D) g;
         g2D.setColor(Color.BLACK);
         // get postion of four corners
@@ -30,6 +30,7 @@ public class Drawer {
             g2D.fillRect(robot.getPosition()[0] - robot.getSizeX() - 20, robot.getPosition()[1] - robot.getSizeY() / 2,
                     robot.getSizeX() - 20,
                     robot.getSizeY());
+            robot.intake(field);
         }
         g2D.setColor(Color.BLUE);
         if (robot.intakeDownRight) {
@@ -37,6 +38,7 @@ public class Drawer {
                     robot.getPosition()[1] - robot.getSizeY() / 2,
                     robot.getSizeX() - 20,
                     robot.getSizeY());
+            robot.intake(field);
         }
 
         // If robot has game element, draw indication
@@ -67,10 +69,13 @@ public class Drawer {
 
         // draw game elements
         for (Ball ball : field.balls) {
-            g.drawOval(ball.getX(), ball.getY(), 10, 10);
+            // if not picked up
+            if (!ball.isPickedUp())
+                g.drawOval(ball.getX(), ball.getY(), 10, 10);
         }
         for (Cube cube : field.cubes) {
-            g.drawOval(cube.getX(), cube.getY(), 10, 10);
+            if (!cube.isPickedUp())
+                g.drawRect(cube.getX(), cube.getY(), 10, 10);
         }
         /*
          * for (Duck duck : field.ducks) {
