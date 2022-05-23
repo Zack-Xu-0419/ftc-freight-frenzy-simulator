@@ -63,9 +63,7 @@ public class Drawer {
             g.drawLine(i * field.robotAreaSize, 0, i * field.robotAreaSize, field.size);
         }
 
-        // draw the carosel
-        g.fillOval(-field.robotAreaSize / 2, field.size - field.robotAreaSize / 2, field.robotAreaSize,
-                field.robotAreaSize);
+
 
         // draw game elements
         for (Ball ball : field.balls) {
@@ -77,11 +75,10 @@ public class Drawer {
             if (!cube.isPickedUp())
                 g.drawRect(cube.getX(), cube.getY(), 10, 10);
         }
-        /*
-         * for (Duck duck : field.ducks) {
-         * g.drawOval(duck.getX() - 10, duck.getY(), 20, 20);
-         * }
-         */
+        for (Duck duck : field.ducks) {
+            if (!duck.isPickedUp())
+                g.drawOval(duck.getX(), duck.getY(), 10, 10);
+        }
 
         // draw barer
         g.drawRect(100, 275, 700, 50);
@@ -99,7 +96,46 @@ public class Drawer {
         g.setColor(Color.BLACK);
         int allianceScore = Scoring.score(field.allianceHub);
         int sharedScore = Scoring.score((field.sharedHub));
+        int duckScore = Scoring.score(field.carosel);
+        Font oldFont = g.getFont();
+        g.setFont(new Font("Arial", Font.PLAIN, 24));
         g.drawString("Alliance Hub: " + allianceScore, 975, 50);
         g.drawString("Shared Hub: " + sharedScore, 975, 100);
+        g.drawString("Duck Spinner: " + duckScore, 975, 150);
+        g.setFont(oldFont);
+    }
+
+    public static void drawTimer(Graphics g, int time) {
+        g.setColor(Color.BLACK);
+        Font oldFont = g.getFont();
+        g.setFont(new Font("Arial", Font.PLAIN, 36));
+        String timerString = "" + time / 60 + ":";
+        if (time % 60 < 10) {
+            timerString += ("0" + time % 60);
+        }
+        else {
+            timerString += time % 60;
+        }
+        if (time <= 30 && time % 2 == 0) {
+            g.setColor(Color.RED);
+        }
+        g.drawString(timerString, 975, 250);
+        g.setColor(Color.BLACK);
+    }
+
+    public static void drawCarosel(Graphics g, Field field) {
+        // draw the carosel
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.setColor(Color.BLACK);
+        g2D.fillOval(-field.robotAreaSize / 2, field.size - field.robotAreaSize / 2, field.robotAreaSize,
+                field.robotAreaSize);
+        g2D.rotate(-Math.toRadians(DrawingTest.caroselTime * 9 / 100.), 0, 900);
+        if (field.carosel.getDucks() != 0) {
+            g2D.drawOval(50, 890, 10, 10);
+            g2D.setColor(Color.YELLOW);
+            g2D.fillOval(50, 890, 10, 10);
+            g2D.setColor(Color.BLACK);
+        }
+        g2D.rotate(Math.toRadians(DrawingTest.caroselTime * 9 / 100.), 0, 900);
     }
 }

@@ -1,5 +1,3 @@
-import javax.lang.model.element.Element;
-
 import GameElements.*;
 
 public class Robot {
@@ -45,9 +43,7 @@ public class Robot {
                 counter++;
             }
 
-            shortest = 1000;
             counter = 0;
-            smallestIndex = 0;
 
             for (GameElement element : field.cubes) {
                 double distanceX = element.getX() - this.getPosition()[0];
@@ -61,16 +57,40 @@ public class Robot {
                 counter++;
             }
 
-            if (shortest < 40) {
+            counter = 0;
+
+            for (GameElement element : field.ducks) {
+                double distanceX = element.getX() - this.getPosition()[0];
+                double distanceY = element.getY() - this.getPosition()[1];
+                double distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                if (distance < shortest) {
+                    shortest = distance;
+                    smallestIndex = counter;
+                    ballOrCube = 2;
+                }
+                counter++;
+            }
+
+            if (shortest < sizeX + 10) {
                 // After finding out which element to intake, mark the element as "Intaked".
-                field.balls[smallestIndex].setPickedUp(true);
+                if (ballOrCube == 0) {
+                    field.balls[smallestIndex].setPickedUp(true);
+                }
+                else if (ballOrCube == 1) {
+                    field.cubes[smallestIndex].setPickedUp(true);
+                }
+                else if (ballOrCube == 2) {
+                    field.ducks[smallestIndex].setPickedUp(true);
+                }
                 // tell robot it has something, along with what it has, and what is the index of
                 // element
                 this.hasGameElement = true;
                 this.gameElement[0] = ballOrCube;
                 this.gameElement[1] = smallestIndex;
                 this.intakeDownLeft = false;
+                DrawingTest.rIntakeCounter = 0;
                 this.intakeDownRight = false;
+                DrawingTest.bIntakeCounter = 0;
             }
 
         }
@@ -94,7 +114,12 @@ public class Robot {
     }
 
     public void setCurrentSlideLength(int newSlideLength) {
+        int oldSlideLength = currentSlideLength;
         currentSlideLength = newSlideLength;
+        if (getPositionAtSlideEnd()[0] >= 900 || getPositionAtSlideEnd()[0] <= 0
+                || getPositionAtSlideEnd()[1] >= 900 || getPositionAtSlideEnd()[1] <= 0) {
+            currentSlideLength = oldSlideLength;
+        }
     }
 
     public int[] getPosition() {
@@ -114,7 +139,13 @@ public class Robot {
     }
 
     public void setOrientation(int orientation) {
+        int oldOrientation = this.orientation;
         this.orientation = orientation;
+        if (getPositionAtSlideEnd()[0] >= 900 || getPositionAtSlideEnd()[0] <= 0
+                || getPositionAtSlideEnd()[1] >= 900 || getPositionAtSlideEnd()[1] <= 0) {
+            this.orientation = oldOrientation;
+        }
+
     }
 
     public void setSize(int sizeX, int sizeY) {
@@ -133,29 +164,72 @@ public class Robot {
 
     public void deposit(Field field) {
         // if deposit position is above the shared shipping hub
-        if (inCarosel(getPositionAtSlideEnd())) {
+        if (inShared(getPositionAtSlideEnd())) {
             if (this.gameElement[0] == 0) {
                 // if currently has ball
                 field.sharedHub.red.add(field.balls[gameElement[1]]);
+                field.balls[gameElement[1]].move(10000, 10000);
             }
-            if (this.gameElement[0] == 1) {
+            else if (this.gameElement[0] == 1) {
                 field.sharedHub.red.add(field.cubes[gameElement[1]]);
+                field.cubes[gameElement[1]].move(10000, 10000);
             }
+            else if (this.gameElement[0] == 2) {
+                field.sharedHub.red.add(field.ducks[gameElement[1]]);
+                field.ducks[gameElement[1]].move(10000, 10000);
+            }
+
             System.out.print("Added");
         }
+        else if (inAlliance(getPositionAtSlideEnd())) {
+            if (this.gameElement[0] == 0) {
+                // if currently has ball
+                field.allianceHub.levelThree.add(field.balls[gameElement[1]]);
+                field.balls[gameElement[1]].move(10000, 10000);
+            }
+            else if (this.gameElement[0] == 1) {
+                field.allianceHub.levelThree.add(field.cubes[gameElement[1]]);
+                field.cubes[gameElement[1]].move(10000, 10000);
+            }
+            else if (this.gameElement[0] == 2) {
+                field.allianceHub.levelThree.add(field.ducks[gameElement[1]]);
+                field.ducks[gameElement[1]].move(10000, 10000);
+            }
+        }
+        else {
+            if (this.gameElement[0] == 0) {
+                // if currently has ball
+                field.balls[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
+                field.balls[gameElement[1]].setPickedUp(false);
+            }
+            else if (this.gameElement[0] == 1) {
+                field.cubes[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
+                field.cubes[gameElement[1]].setPickedUp(false);
+            }
+            else if (this.gameElement[0] == 2) {
+                field.ducks[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
+                field.ducks[gameElement[1]].setPickedUp(false);
+            }
+        }
+        this.hasGameElement = false;
     }
 
-    public boolean inCarosel(int[] position) {
-        return (position[0] < (int) (75. / 2 * Math.sqrt(2))
-                && position[1] > (int) (900 - 75. / 2 * Math.sqrt(2)))
-                ||
-                // If collide with Shared shipping hub
-                (position[0] > 300 && position[0] < 500
-                        && position[1] > 100 && position[1] < 300)
-                ||
-                // If collide with Alliance shipping hub
-                (position[0] > 150 && position[0] < 350
-                        && position[1] > 475 && position[1] < 675);
+    public boolean nearCarosel() {
+        int X = position[0] - sizeX;
+        int Y = position[1] + sizeY;
+        return (X < (int) (75. / 2 * Math.sqrt(2) + 10)
+                && Y > (int) (900 - 75. / 2 * Math.sqrt(2)) - 10);
+
+    }
+
+    public boolean inShared(int[] position) {
+        return (position[0] > 400 && position[0] < 500
+                && position[1] > 100 && position[1] < 200);
+    }
+
+    public boolean inAlliance(int[] position) {
+        return (position[0] > 250 && position[0] < 350
+                && position[1] > 475 && position[1] < 575);
     }
 
     public boolean move(int direction) {
@@ -207,6 +281,11 @@ public class Robot {
                         && Y > 475 && Y < 675)
 
         ) {
+            position[0] = oldX;
+            position[1] = oldY;
+        }
+        if (getPositionAtSlideEnd()[0] >= 900 || getPositionAtSlideEnd()[0] <= 0
+                || getPositionAtSlideEnd()[1] >= 900 || getPositionAtSlideEnd()[1] <= 0) {
             position[0] = oldX;
             position[1] = oldY;
         }
@@ -404,6 +483,7 @@ public class Robot {
             default:
                 return false;
         }
+
 
         // barrer
 

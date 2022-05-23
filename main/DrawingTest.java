@@ -1,21 +1,34 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class DrawingTest extends JPanel implements MouseListener {
 
     static Field field = new Field();
     static Robot robot = new Robot();
+    static Thread refreshThread;
 
     // Flags for handling multiple key presses at the same time
-    static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
+    public static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
             rotateLeft = false, rotateRight = false, extendingSlide = false, retractingSlide = false;
-    static int currentOrientation;
+    public static int currentOrientation;
+    public static int gameTime = 120;
+    public static int caroselTime = 0;
+    public static boolean end = false;
 
-    static int rIntakeCounter = 0;
-    static int bIntakeCounter = 0;
-    static int slideModeCounter = 0;
-    static boolean slideManualMode = false;
+    public static int rIntakeCounter = 0;
+    public static int bIntakeCounter = 0;
+    public static int slideModeCounter = 0;
+    public static boolean slideManualMode = false;
+
+    public static Runnable caroselTimer;
+    static ScheduledExecutorService caroselTimeScheduler = Executors.newScheduledThreadPool(1);
+    public static boolean onceNear = false;
 
     // This variable is required for window focusing for keyboard detection
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -25,6 +38,8 @@ public class DrawingTest extends JPanel implements MouseListener {
         Drawer.drawField(g, field);
         Drawer.drawRobot(g, robot, field);
         Drawer.drawScore(g, field);
+        Drawer.drawTimer(g, gameTime);
+        Drawer.drawCarosel(g, field);
     }
 
     public DrawingTest() {
@@ -101,12 +116,29 @@ public class DrawingTest extends JPanel implements MouseListener {
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0, true), "SLIDE_MODE");
 
         getActionMap().put("SLIDE_MODE", new SlideModeAction());
+
+        // Keybinds for deposit
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true), "DEPOSIT");
+
+        getActionMap().put("DEPOSIT", new DepositAction());
     }
 
     public static void main(String[] args) {
+        final ScheduledExecutorService gameTimeScheduler = Executors.newScheduledThreadPool(1);
+
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                gameTime--;
+                if (gameTime <= 0) {
+                    gameTimeScheduler.shutdown();
+                }
+            }
+        };
+        gameTimeScheduler.scheduleAtFixedRate(runnable, 1, 1, SECONDS);
         robot.setSize(50, 50);
+        robot.setPosition(robot.getSizeX(), 500);
         JFrame window = new JFrame("FTC Freight Frenzy");
-        window.setBounds(0, 0, 900 + 20, 900 + 57);
+        window.setBounds(0, 0, 1200 + 20, 900 + 57);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DrawingTest dt = new DrawingTest();
         dt.setBackground(Color.WHITE);
@@ -303,7 +335,9 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (rIntakeCounter == 0) {
+            if (rIntakeCounter == 0 && !robot.hasGameElement) {
+                retractingSlide = true;
+                extendingSlide = false;
                 robot.intakeDownLeft = true;
                 rIntakeCounter++;
             } else {
@@ -317,8 +351,10 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (bIntakeCounter == 0) {
+            if (bIntakeCounter == 0 && !robot.hasGameElement) {
                 robot.intakeDownRight = true;
+                retractingSlide = true;
+                extendingSlide = false;
                 bIntakeCounter++;
             } else {
                 robot.intakeDownRight = false;
@@ -327,11 +363,25 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    public class DepositAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (robot.hasGameElement) {
+                robot.deposit(field);
+            }
+        }
+    }
+
     public static void refreshScreen(DrawingTest param) {
-        Thread thread = new Thread() {
+        refreshThread = new Thread() {
             public void run() {
-                while (true) {
+                while (!end) {
                     try {
+                        if (gameTime <= 0) {
+                            end = true;
+                            continue;
+                        }
                         currentOrientation = robot.getOrientation();
                         if (upPressed) {
                             robot.move(3);
@@ -374,6 +424,28 @@ public class DrawingTest extends JPanel implements MouseListener {
                                 robot.slideExtended = false;
                             }
                         }
+                        if (robot.nearCarosel() && gameTime <= 30) {
+                            if (!onceNear) {
+                                caroselTimeScheduler = Executors.newScheduledThreadPool(1);
+                                onceNear = true;
+                                caroselTimer = new Runnable() {
+                                    public void run() {
+                                        caroselTime++;
+                                        if (caroselTime >= 1000) {
+                                            field.carosel.removeDuck();
+                                            field.ducks[10 - field.carosel.getDucks() - 1].move(0, 900 - 75 - 10);
+                                            caroselTimeScheduler = Executors.newScheduledThreadPool(1);
+                                            caroselTime = 0;
+                                        }
+                                    }
+                                };
+                                caroselTimeScheduler.scheduleAtFixedRate(caroselTimer, 0, 1, MILLISECONDS);
+                            }
+                        }
+                        else {
+                            onceNear= false;
+                            caroselTimeScheduler.shutdown();
+                        }
                         // 60 FPS
                         sleep((int) (1000.0 / 60));
                         param.repaint();
@@ -383,6 +455,7 @@ public class DrawingTest extends JPanel implements MouseListener {
                 }
             }
         };
-        thread.start();
+        refreshThread.start();
     }
+
 }

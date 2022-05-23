@@ -54,17 +54,11 @@ public class Field {
 
         }
 
-        /*
-         * for(int i = 0; i < numOfDuck; i++){
-         * int x, y;
-         * do{
-         * x = (int) (Math.random() * robotAreaSize);
-         * y = (int) (Math.random() * robotAreaSize);
-         * }while(!check(x, y));
-         * ducks[i] = new Duck(x, y);
-         * 
-         * }
-         */
+        for(int i = 0; i < numOfDuck; i++){
+            int x, y;
+            ducks[i] = new Duck(10000, 10000);
+
+        }
     }
 
     // check whether this radom point has something on it
