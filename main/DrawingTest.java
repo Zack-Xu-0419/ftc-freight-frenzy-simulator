@@ -50,7 +50,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         Drawer.drawField(g, field);
         Drawer.drawRobot(g, robot, field);
 
-        Drawer.drawScore(g, field, isParked);
+        Drawer.drawScore(g, field, robot, isParked);
         Drawer.drawTimer(g, gameTime);
         Drawer.drawCarosel(g, field);
     }

@@ -113,26 +113,38 @@ public class Drawer {
     }
 
     // draw the scoring board
-    public static void drawScore(Graphics g, Field field, boolean isParked) {
+    public static void drawScore(Graphics g, Field field, Robot robot, boolean isParked) {
         g.setColor(Color.BLACK);
         int allianceScore = Scoring.score(field.allianceHub);
         int sharedScore = Scoring.score((field.sharedHub));
         int duckScore = Scoring.score(field.carosel);
+        int totalScore = allianceScore + sharedScore + duckScore - 10 * robot.getPenalties();
         Font oldFont = g.getFont();
         g.setFont(new Font("Arial", Font.PLAIN, 24));
         g.drawString("Alliance Hub: " + allianceScore, 975, 50);
         g.drawString("Shared Hub: " + sharedScore, 975, 100);
         g.drawString("Duck Spinner: " + duckScore, 975, 150);
+        g.drawString("Penalties: " + (-10 * robot.getPenalties()), 975, 200);
         if (DrawingTest.realisticMode) {
             g.setColor(Color.RED);
-            g.drawString("Realistic Mode On!", 975, 250);
+            g.drawString("Realistic Mode On!", 975, 350);
             g.setColor(Color.BLACK);
         }
         //if parked correctly after the game ended, add 6 points
         if (isParked) {
-            g.drawString("Total Score: " + (allianceScore + sharedScore + duckScore + 6) , 975, 200);
+            if (totalScore + 6 < 0) {
+                g.drawString("Total Score: " + 0 , 975, 250);
+            }
+            else {
+                g.drawString("Total Score: " + (totalScore + 6), 975, 250);
+            }
         } else {
-            g.drawString("Total Score: " + (allianceScore + sharedScore + duckScore), 975, 200);
+            if (totalScore < 0) {
+                g.drawString("Total Score: " + 0, 975, 250);
+            }
+            else {
+                g.drawString("Total Score: " + (totalScore), 975, 250);
+            }
         }
         g.setFont(oldFont);
         
@@ -152,7 +164,7 @@ public class Drawer {
         if (time <= 30 && time % 2 == 0) {
             g.setColor(Color.RED);
         }
-        g.drawString(timerString, 975, 300);
+        g.drawString(timerString, 975, 305);
         g.setColor(Color.BLACK);
     }
 
