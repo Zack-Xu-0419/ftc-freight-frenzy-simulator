@@ -52,6 +52,10 @@ public class Drawer {
                 g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
             }
         }
+        if (robot.isFried) {
+            g2D.setColor(Color.RED);
+            g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
+        }
 
         g2D.setColor(Color.BLACK);
         // rotate back the graphic so that next time it be stadard direction, this will
@@ -109,18 +113,41 @@ public class Drawer {
     }
 
     // draw the scoring board
-    public static void drawScore(Graphics g, Field field) {
+    public static void drawScore(Graphics g, Field field, Robot robot, boolean isParked) {
         g.setColor(Color.BLACK);
         int allianceScore = Scoring.score(field.allianceHub);
         int sharedScore = Scoring.score((field.sharedHub));
         int duckScore = Scoring.score(field.carosel);
+        int totalScore = allianceScore + sharedScore + duckScore - 10 * robot.getPenalties();
         Font oldFont = g.getFont();
         g.setFont(new Font("Arial", Font.PLAIN, 24));
         g.drawString("Alliance Hub: " + allianceScore, 975, 50);
         g.drawString("Shared Hub: " + sharedScore, 975, 100);
         g.drawString("Duck Spinner: " + duckScore, 975, 150);
-        g.drawString("Total Score: " + (allianceScore + sharedScore + duckScore), 975, 200);
+        g.drawString("Penalties: " + (-10 * robot.getPenalties()), 975, 200);
+        if (DrawingTest.realisticMode) {
+            g.setColor(Color.RED);
+            g.drawString("Realistic Mode On!", 975, 350);
+            g.setColor(Color.BLACK);
+        }
+        //if parked correctly after the game ended, add 6 points
+        if (isParked) {
+            if (totalScore + 6 < 0) {
+                g.drawString("Total Score: " + 0 , 975, 250);
+            }
+            else {
+                g.drawString("Total Score: " + (totalScore + 6), 975, 250);
+            }
+        } else {
+            if (totalScore < 0) {
+                g.drawString("Total Score: " + 0, 975, 250);
+            }
+            else {
+                g.drawString("Total Score: " + (totalScore), 975, 250);
+            }
+        }
         g.setFont(oldFont);
+        
     }
 
     public static void drawTimer(Graphics g, int time) {
@@ -137,7 +164,7 @@ public class Drawer {
         if (time <= 30 && time % 2 == 0) {
             g.setColor(Color.RED);
         }
-        g.drawString(timerString, 975, 300);
+        g.drawString(timerString, 975, 305);
         g.setColor(Color.BLACK);
     }
 

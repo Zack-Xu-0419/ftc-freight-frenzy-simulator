@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -15,7 +16,8 @@ public class DrawingTest extends JPanel implements MouseListener {
 
     // Flags for handling multiple key presses at the same time
     public static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
-            rotateLeft = false, rotateRight = false, extendingSlide = false, retractingSlide = false, slideReturned = true;
+            rotateLeft = false, rotateRight = false, extendingSlide = false, retractingSlide = false, slideReturned = true,
+            realisticMode = false;
     public static int currentOrientation;
     public static int gameTime = 120;
     public static int caroselTime = 0;
@@ -35,9 +37,20 @@ public class DrawingTest extends JPanel implements MouseListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        boolean isParked = false;
+        if(gameTime == 0){
+            double rightMostX = robot.getPosition()[0]
+                    + Math.abs((Math.sqrt(2) * robot.getSizeX()) * Math.cos(Math.PI / 4 - robot.getOrientation() % 90 * Math.PI / 180));
+            double downMostY = robot.getPosition()[1]
+                    + Math.abs((Math.sqrt(2) * robot.getSizeY()) * Math.cos(Math.PI / 4 - robot.getOrientation() % 90 * Math.PI / 180));
+            if(downMostY <= 300 && rightMostX <= 300){
+                isParked = true;
+            }
+        }
         Drawer.drawField(g, field);
         Drawer.drawRobot(g, robot, field);
-        Drawer.drawScore(g, field);
+
+        Drawer.drawScore(g, field, robot, isParked);
         Drawer.drawTimer(g, gameTime);
         Drawer.drawCarosel(g, field);
     }
@@ -121,6 +134,11 @@ public class DrawingTest extends JPanel implements MouseListener {
         getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true), "DEPOSIT");
 
         getActionMap().put("DEPOSIT", new DepositAction());
+
+        // Keybinds for "realistic mode"
+        getInputMap(IFW).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE , 0, true), "REALISM");
+
+        getActionMap().put("REALISM", new RealismAction());
     }
 
     public static void main(String[] args) {
@@ -373,6 +391,19 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    public class RealismAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (!realisticMode) {
+                realisticMode = true;
+            }
+            else {
+                realisticMode = false;
+            }
+        }
+    }
+
     public static void refreshScreen(DrawingTest param) {
         refreshThread = new Thread() {
             public void run() {
@@ -382,75 +413,83 @@ public class DrawingTest extends JPanel implements MouseListener {
                             end = true;
                             continue;
                         }
-                        currentOrientation = robot.getOrientation();
-                        if (upPressed) {
-                            robot.move(3);
-                        }
-                        if (downPressed) {
-                            robot.move(4);
-                        }
-                        if (leftPressed) {
-                            robot.move(1);
-                        }
-                        if (rightPressed) {
-                            robot.move(2);
-                        }
-                        if (rotateLeft) {
-                            currentOrientation = (currentOrientation + 3) % 360;
-                            robot.setOrientation(currentOrientation);
-                        }
-                        if (rotateRight) {
-                            currentOrientation = (currentOrientation) - 3 % 360;
-                            if (currentOrientation < 0) {
-                                currentOrientation = 360 + currentOrientation;
-                            }
-                            robot.setOrientation(currentOrientation);
-                        }
-                        if (extendingSlide) {
-                            robot.slideExtended = true;
-                            if (robot.getCurrentSlideLength() + 5 <= robot.getMaxSlideLength()) {
-                                robot.setCurrentSlideLength(robot.getCurrentSlideLength() + 5);
-                            } else {
-                                robot.setCurrentSlideLength(robot.getMaxSlideLength());
-                                extendingSlide = false;
+                        if (realisticMode) {
+                            Random random = new Random();
+                            int chance = random.nextInt(7200);
+                            if (chance < 2) {
+                                robot.isFried = true;
                             }
                         }
-                        if (retractingSlide) {
-                            if (robot.getCurrentSlideLength() - 5 >= 0) {
-                                robot.setCurrentSlideLength(robot.getCurrentSlideLength() - 5);
-                            } else {
-                                robot.setCurrentSlideLength(0);
-                                retractingSlide = false;
-                                robot.slideExtended = false;
+                        if (!robot.isFried) {
+                            currentOrientation = robot.getOrientation();
+                            if (upPressed) {
+                                robot.move(3);
                             }
-                        }
-                        if (robot.nearCarosel() && gameTime <= 30) {
-                            if (!onceNear) {
-                                caroselTimeScheduler = Executors.newScheduledThreadPool(1);
-                                onceNear = true;
-                                caroselTimer = new Runnable() {
-                                    public void run() {
-                                        caroselTime++;
-                                        if (caroselTime >= 1000) {
-                                            field.carosel.removeDuck();
-                                            if (field.carosel.getDucks() != 0) {
-                                                field.ducks[10 - field.carosel.getDucks() - 1].move(0, 900 - 75 - 10);
+                            if (downPressed) {
+                                robot.move(4);
+                            }
+                            if (leftPressed) {
+                                robot.move(1);
+                            }
+                            if (rightPressed) {
+                                robot.move(2);
+                            }
+                            if (rotateLeft) {
+                                currentOrientation = (currentOrientation + 3) % 360;
+                                robot.setOrientation(currentOrientation);
+                            }
+                            if (rotateRight) {
+                                currentOrientation = (currentOrientation) - 3 % 360;
+                                if (currentOrientation < 0) {
+                                    currentOrientation = 360 + currentOrientation;
+                                }
+                                robot.setOrientation(currentOrientation);
+                            }
+                            if (extendingSlide) {
+                                robot.slideExtended = true;
+                                if (robot.getCurrentSlideLength() + 5 <= robot.getMaxSlideLength()) {
+                                    robot.setCurrentSlideLength(robot.getCurrentSlideLength() + 5);
+                                } else {
+                                    robot.setCurrentSlideLength(robot.getMaxSlideLength());
+                                    extendingSlide = false;
+                                }
+                            }
+                            if (retractingSlide) {
+                                if (robot.getCurrentSlideLength() - 5 >= 0) {
+                                    robot.setCurrentSlideLength(robot.getCurrentSlideLength() - 5);
+                                } else {
+                                    robot.setCurrentSlideLength(0);
+                                    retractingSlide = false;
+                                    robot.slideExtended = false;
+                                }
+                            }
+                            if (robot.nearCarosel() && gameTime <= 30) {
+                                if (!onceNear) {
+                                    caroselTimeScheduler = Executors.newScheduledThreadPool(1);
+                                    onceNear = true;
+                                    caroselTimer = new Runnable() {
+                                        public void run() {
+                                            caroselTime++;
+                                            if (caroselTime >= 1000) {
+                                                field.carosel.removeDuck();
+                                                if (field.carosel.getDucks() != 0) {
+                                                    field.ducks[10 - field.carosel.getDucks() - 1].move(0, 900 - 75 - 10);
+                                                }
+                                                caroselTimeScheduler = Executors.newScheduledThreadPool(1);
+                                                caroselTime = 0;
                                             }
-                                            caroselTimeScheduler = Executors.newScheduledThreadPool(1);
-                                            caroselTime = 0;
                                         }
-                                    }
-                                };
-                                caroselTimeScheduler.scheduleAtFixedRate(caroselTimer, 0, 1, MILLISECONDS);
+                                    };
+                                    caroselTimeScheduler.scheduleAtFixedRate(caroselTimer, 0, 1, MILLISECONDS);
+                                }
+                            } else {
+                                onceNear = false;
+                                caroselTimeScheduler.shutdown();
                             }
-                        }
-                        else {
-                            onceNear= false;
-                            caroselTimeScheduler.shutdown();
-                        }
-                        if (!slideReturned) {
-                            if (robot.getCurrentSlideLength() == 0) {
-                                slideReturned = true;
+                            if (!slideReturned) {
+                                if (robot.getCurrentSlideLength() == -1) {
+                                    slideReturned = true;
+                                }
                             }
                         }
                         // 60 FPS

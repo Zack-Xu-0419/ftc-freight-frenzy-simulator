@@ -7,7 +7,7 @@ public class Robot {
     private int orientation = 0; // Degree of rotation. 0 means Slide is facing to the other alliance
     private int speed = 5;
     private int maxSlideLength = 400;
-    private int currentSlideLength = 0;
+    private int currentSlideLength = -1;
     private int oldX = 0;
     private int oldY = 0;
     public boolean slideExtended = false;
@@ -15,9 +15,15 @@ public class Robot {
     public boolean intakeDownRight = false;
     public boolean hasGameElement = false;
     public int gameElement[] = { 0, 0 };
+    public boolean isFried = false;
+    private int penalties = 0;
 
     Robot() {
 
+    }
+
+    public int getPenalties() {
+        return penalties;
     }
 
     public void intake(Field field) {
@@ -119,6 +125,9 @@ public class Robot {
     public void setCurrentSlideLength(int newSlideLength) {
         int oldSlideLength = currentSlideLength;
         currentSlideLength = newSlideLength;
+        if (currentSlideLength == 0) {
+            currentSlideLength = -1;
+        }
         if (getPositionAtSlideEnd()[0] >= 900 || getPositionAtSlideEnd()[0] <= 0
                 || getPositionAtSlideEnd()[1] >= 900 || getPositionAtSlideEnd()[1] <= 0) {
             currentSlideLength = oldSlideLength;
@@ -167,31 +176,63 @@ public class Robot {
 
     public void deposit(Field field) {
         // if deposit position is above the shared shipping hub
+        double leftMostX = position[0]
+                - Math.abs((Math.sqrt(2) * sizeX) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
+        double downMostY = position[1]
+                + Math.abs((Math.sqrt(2) * sizeY) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
         if (DrawingTest.slideReturned) {
             if (inShared(getPositionAtSlideEnd())) {
                 if (this.gameElement[0] == 0) {
                     // if currently has ball
-                    field.sharedHub.red.add(field.balls[gameElement[1]]);
+                    if (!(leftMostX <= 300 && downMostY <= 300)) {
+                        field.sharedHub.red.add(field.balls[gameElement[1]]);
+                    }
+                    else {
+                        penalties++;
+                    }
                     field.balls[gameElement[1]].move(10000, 10000);
                 } else if (this.gameElement[0] == 1) {
-                    field.sharedHub.red.add(field.cubes[gameElement[1]]);
+                    if (!(leftMostX <= 300 && downMostY <= 300)) {
+                        field.sharedHub.red.add(field.cubes[gameElement[1]]);
+                    }
+                    else {
+                        penalties++;
+                    }
                     field.cubes[gameElement[1]].move(10000, 10000);
                 } else if (this.gameElement[0] == 2) {
-                    field.sharedHub.red.add(field.ducks[gameElement[1]]);
+                    if (!(leftMostX <= 300 && downMostY <= 300)) {
+                        field.sharedHub.red.add(field.ducks[gameElement[1]]);
+                    }
+                    else {
+                        penalties++;
+                    }
                     field.ducks[gameElement[1]].move(10000, 10000);
                 }
-
-                System.out.print("Added");
             } else if (inAlliance(getPositionAtSlideEnd())) {
                 if (this.gameElement[0] == 0) {
                     // if currently has ball
-                    field.allianceHub.levelThree.add(field.balls[gameElement[1]]);
+                    if (!(leftMostX <= 300 && downMostY <= 300)) {
+                        field.allianceHub.levelThree.add(field.balls[gameElement[1]]);
+                    }
+                    else {
+                        penalties++;
+                    }
                     field.balls[gameElement[1]].move(10000, 10000);
                 } else if (this.gameElement[0] == 1) {
-                    field.allianceHub.levelThree.add(field.cubes[gameElement[1]]);
+                    if (!(leftMostX <= 300 && downMostY <= 300)) {
+                        field.allianceHub.levelThree.add(field.cubes[gameElement[1]]);
+                    }
+                    else {
+                        penalties++;
+                    }
                     field.cubes[gameElement[1]].move(10000, 10000);
                 } else if (this.gameElement[0] == 2) {
-                    field.allianceHub.levelThree.add(field.ducks[gameElement[1]]);
+                    if (!(leftMostX <= 300 && downMostY <= 300)) {
+                        field.allianceHub.levelThree.add(field.ducks[gameElement[1]]);
+                    }
+                    else {
+                        penalties++;
+                    }
                     field.ducks[gameElement[1]].move(10000, 10000);
                 }
             } else {
