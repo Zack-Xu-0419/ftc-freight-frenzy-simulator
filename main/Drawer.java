@@ -43,8 +43,14 @@ public class Drawer {
 
         // If robot has game element, draw indication
         if (robot.hasGameElement) {
-            g2D.setColor(Color.GREEN);
-            g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
+            if (DrawingTest.slideReturned) {
+                g2D.setColor(Color.GREEN);
+                g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
+            }
+            else {
+                g2D.setColor(Color.ORANGE);
+                g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
+            }
         }
 
         g2D.setColor(Color.BLACK);

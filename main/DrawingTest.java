@@ -15,7 +15,7 @@ public class DrawingTest extends JPanel implements MouseListener {
 
     // Flags for handling multiple key presses at the same time
     public static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
-            rotateLeft = false, rotateRight = false, extendingSlide = false, retractingSlide = false;
+            rotateLeft = false, rotateRight = false, extendingSlide = false, retractingSlide = false, slideReturned = true;
     public static int currentOrientation;
     public static int gameTime = 120;
     public static int caroselTime = 0;
@@ -433,7 +433,9 @@ public class DrawingTest extends JPanel implements MouseListener {
                                         caroselTime++;
                                         if (caroselTime >= 1000) {
                                             field.carosel.removeDuck();
-                                            field.ducks[10 - field.carosel.getDucks() - 1].move(0, 900 - 75 - 10);
+                                            if (field.carosel.getDucks() != 0) {
+                                                field.ducks[10 - field.carosel.getDucks() - 1].move(0, 900 - 75 - 10);
+                                            }
                                             caroselTimeScheduler = Executors.newScheduledThreadPool(1);
                                             caroselTime = 0;
                                         }
@@ -445,6 +447,11 @@ public class DrawingTest extends JPanel implements MouseListener {
                         else {
                             onceNear= false;
                             caroselTimeScheduler.shutdown();
+                        }
+                        if (!slideReturned) {
+                            if (robot.getCurrentSlideLength() == 0) {
+                                slideReturned = true;
+                            }
                         }
                         // 60 FPS
                         sleep((int) (1000.0 / 60));

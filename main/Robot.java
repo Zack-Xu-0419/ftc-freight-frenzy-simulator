@@ -91,6 +91,9 @@ public class Robot {
                 DrawingTest.rIntakeCounter = 0;
                 this.intakeDownRight = false;
                 DrawingTest.bIntakeCounter = 0;
+                if (getCurrentSlideLength() != 0) {
+                    DrawingTest.slideReturned = false;
+                }
             }
 
         }
@@ -164,54 +167,49 @@ public class Robot {
 
     public void deposit(Field field) {
         // if deposit position is above the shared shipping hub
-        if (inShared(getPositionAtSlideEnd())) {
-            if (this.gameElement[0] == 0) {
-                // if currently has ball
-                field.sharedHub.red.add(field.balls[gameElement[1]]);
-                field.balls[gameElement[1]].move(10000, 10000);
-            }
-            else if (this.gameElement[0] == 1) {
-                field.sharedHub.red.add(field.cubes[gameElement[1]]);
-                field.cubes[gameElement[1]].move(10000, 10000);
-            }
-            else if (this.gameElement[0] == 2) {
-                field.sharedHub.red.add(field.ducks[gameElement[1]]);
-                field.ducks[gameElement[1]].move(10000, 10000);
-            }
+        if (DrawingTest.slideReturned) {
+            if (inShared(getPositionAtSlideEnd())) {
+                if (this.gameElement[0] == 0) {
+                    // if currently has ball
+                    field.sharedHub.red.add(field.balls[gameElement[1]]);
+                    field.balls[gameElement[1]].move(10000, 10000);
+                } else if (this.gameElement[0] == 1) {
+                    field.sharedHub.red.add(field.cubes[gameElement[1]]);
+                    field.cubes[gameElement[1]].move(10000, 10000);
+                } else if (this.gameElement[0] == 2) {
+                    field.sharedHub.red.add(field.ducks[gameElement[1]]);
+                    field.ducks[gameElement[1]].move(10000, 10000);
+                }
 
-            System.out.print("Added");
+                System.out.print("Added");
+            } else if (inAlliance(getPositionAtSlideEnd())) {
+                if (this.gameElement[0] == 0) {
+                    // if currently has ball
+                    field.allianceHub.levelThree.add(field.balls[gameElement[1]]);
+                    field.balls[gameElement[1]].move(10000, 10000);
+                } else if (this.gameElement[0] == 1) {
+                    field.allianceHub.levelThree.add(field.cubes[gameElement[1]]);
+                    field.cubes[gameElement[1]].move(10000, 10000);
+                } else if (this.gameElement[0] == 2) {
+                    field.allianceHub.levelThree.add(field.ducks[gameElement[1]]);
+                    field.ducks[gameElement[1]].move(10000, 10000);
+                }
+            } else {
+                if (this.gameElement[0] == 0) {
+                    // if currently has ball
+                    field.balls[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
+                    field.balls[gameElement[1]].setPickedUp(false);
+                } else if (this.gameElement[0] == 1) {
+                    field.cubes[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
+                    field.cubes[gameElement[1]].setPickedUp(false);
+                } else if (this.gameElement[0] == 2) {
+                    field.ducks[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
+                    field.ducks[gameElement[1]].setPickedUp(false);
+                }
+            }
+            this.hasGameElement = false;
         }
-        else if (inAlliance(getPositionAtSlideEnd())) {
-            if (this.gameElement[0] == 0) {
-                // if currently has ball
-                field.allianceHub.levelThree.add(field.balls[gameElement[1]]);
-                field.balls[gameElement[1]].move(10000, 10000);
-            }
-            else if (this.gameElement[0] == 1) {
-                field.allianceHub.levelThree.add(field.cubes[gameElement[1]]);
-                field.cubes[gameElement[1]].move(10000, 10000);
-            }
-            else if (this.gameElement[0] == 2) {
-                field.allianceHub.levelThree.add(field.ducks[gameElement[1]]);
-                field.ducks[gameElement[1]].move(10000, 10000);
-            }
-        }
-        else {
-            if (this.gameElement[0] == 0) {
-                // if currently has ball
-                field.balls[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
-                field.balls[gameElement[1]].setPickedUp(false);
-            }
-            else if (this.gameElement[0] == 1) {
-                field.cubes[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
-                field.cubes[gameElement[1]].setPickedUp(false);
-            }
-            else if (this.gameElement[0] == 2) {
-                field.ducks[gameElement[1]].move(getPositionAtSlideEnd()[0], getPositionAtSlideEnd()[1]);
-                field.ducks[gameElement[1]].setPickedUp(false);
-            }
-        }
-        this.hasGameElement = false;
+
     }
 
     public boolean nearCarosel() {
