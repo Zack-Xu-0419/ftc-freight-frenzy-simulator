@@ -399,7 +399,6 @@ public class Robot {
                     if (sizeX <= sizeY) {
                         if (leftMostX < 10) {
                             rotateAgainstWall(direction);
-                            System.out.println("LeftReached");
                             return false;
                         } else {
                             this.position[0] -= speed;
@@ -407,7 +406,6 @@ public class Robot {
                     } else {
                         if (leftMostX < 0) {
                             rotateAgainstWall(direction);
-                            System.out.println("LeftReached");
                             return false;
                         } else {
                             this.position[0] -= speed;
@@ -446,14 +444,12 @@ public class Robot {
                         rotateAgainstWall(direction);
                         return false;
                     } else {
-                        System.out.println(position[0]);
                         if (sizeX <= sizeY) {
                             // If robot is rotated
                             if (rightMostX > 900 - 10) {
                                 rotateAgainstWall(direction);
                                 return false;
                             } else {
-                                System.out.println("MovingRight");
                                 this.position[0] += speed;
                             }
                         } else {
@@ -461,7 +457,6 @@ public class Robot {
                                 rotateAgainstWall(direction);
                                 return false;
                             } else {
-                                System.out.println("MovingRight");
                                 this.position[0] += speed;
                             }
                         }
@@ -545,7 +540,6 @@ public class Robot {
                             rotateAgainstWall(direction);
                             return false;
                         } else {
-                            System.out.println(downMostY);
                             this.position[1] += speed;
                         }
                     } else {
@@ -554,7 +548,6 @@ public class Robot {
                             rotateAgainstWall(direction);
                             return false;
                         } else {
-                            System.out.println(downMostY);
                             this.position[1] += speed;
                         }
                     }

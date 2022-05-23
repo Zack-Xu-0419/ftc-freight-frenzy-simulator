@@ -76,13 +76,6 @@ public class Field {
                 return false;
             }
         }
-        /*
-         * for(int i = 0; i < numOfDuck && ducks[i] != null; i++){
-         * if(x > ducks[i].getX() - 10 && y == ducks[i].getY()){
-         * return false;
-         * }
-         * }
-         */
         return true;
     }
 }

@@ -8,7 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class SimulatorDriver extends JPanel implements MouseListener {
+public class SimulatorDriver extends JPanel {
 
     static Field field = new Field();
     static Robot robot = new Robot();
@@ -73,7 +73,6 @@ public class SimulatorDriver extends JPanel implements MouseListener {
         setFocusable(true);
         requestFocus();
         requestFocusInWindow();
-        addMouseListener(this);
 
         // Keybinds for robot movement. These listen for key presses.
 
@@ -184,28 +183,6 @@ public class SimulatorDriver extends JPanel implements MouseListener {
         window.setVisible(true);
         refreshScreen(sd);
         System.out.println("App is running");
-    }
-
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        System.out.println("Click!");
-        Point p = e.getPoint();
-        System.out.println("" + p.x + ", " + p.y);
     }
 
     // Tracks whether the movement keys are pressed
@@ -475,14 +452,14 @@ public class SimulatorDriver extends JPanel implements MouseListener {
                                 robot.move(2);
                             }
                             if (rotateLeft) {
-                                currentOrientation = (currentOrientation + 3) % 360;
-                                robot.setOrientation(currentOrientation);
-                            }
-                            if (rotateRight) {
                                 currentOrientation = (currentOrientation) - 3 % 360;
                                 if (currentOrientation < 0) {
                                     currentOrientation = 360 + currentOrientation;
                                 }
+                                robot.setOrientation(currentOrientation);
+                            }
+                            if (rotateRight) {
+                                currentOrientation = (currentOrientation + 3) % 360;
                                 robot.setOrientation(currentOrientation);
                             }
                             if (extendingSlide) {
