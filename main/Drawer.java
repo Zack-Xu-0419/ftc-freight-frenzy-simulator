@@ -46,7 +46,7 @@ public class Drawer {
         // If robot has game element, draw indication
         if (robot.hasGameElement) {
             // If the slide has returned, draw green
-            if (DrawingTest.slideReturned) {
+            if (SimulatorDriver.slideReturned) {
                 g2D.setColor(Color.GREEN);
                 g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
             }
@@ -148,7 +148,7 @@ public class Drawer {
         g.drawString("Shared Hub: " + sharedScore, 1000, 100);
         g.drawString("Duck Spinner: " + duckScore, 1000, 150);
         g.drawString("Penalties: " + (-10 * robot.getPenalties()), 1000, 200);
-        if (DrawingTest.realisticMode) {
+        if (SimulatorDriver.realisticMode) {
             g.setColor(Color.RED);
             g.drawString("Realistic Mode On!", 990, 350);
             g.setColor(Color.BLACK);
@@ -187,7 +187,7 @@ public class Drawer {
         g.drawString("If in manual mode, hold to adjust.", 925, 650);
         g.drawString("Spacebar - Deposit", 925, 700);
         g.drawString("Backspace - Realistic Mode", 925, 750);
-        if (DrawingTest.slideManualMode) {
+        if (SimulatorDriver.slideManualMode) {
             g.setColor(Color.GREEN);
             g.drawString("Manual Mode ON!", 990, 825);
         }
@@ -227,7 +227,7 @@ public class Drawer {
         g2D.fillOval(-field.robotAreaSize / 2, field.size - field.robotAreaSize / 2, field.robotAreaSize,
                 field.robotAreaSize);
         // "Spins" duck based on how long the robot has been near the carosel
-        g2D.rotate(-Math.toRadians(DrawingTest.caroselTime * 9 / 100.), 0, 900);
+        g2D.rotate(-Math.toRadians(SimulatorDriver.caroselTime * 9 / 100.), 0, 900);
         // Displays a duck on the carosel
         if (field.carosel.getDucks() != 0) {
             g2D.drawOval(50, 890, 10, 10);
@@ -235,6 +235,6 @@ public class Drawer {
             g2D.fillOval(50, 890, 10, 10);
             g2D.setColor(Color.BLACK);
         }
-        g2D.rotate(Math.toRadians(DrawingTest.caroselTime * 9 / 100.), 0, 900);
+        g2D.rotate(Math.toRadians(SimulatorDriver.caroselTime * 9 / 100.), 0, 900);
     }
 }

@@ -100,12 +100,12 @@ public class Robot {
 
                 // Resets intakes and appropriate toggles
                 this.intakeDownLeft = false;
-                DrawingTest.rIntakeCounter = 0;
+                SimulatorDriver.rIntakeCounter = 0;
                 this.intakeDownRight = false;
-                DrawingTest.bIntakeCounter = 0;
+                SimulatorDriver.bIntakeCounter = 0;
                 // Checks if slide is already returned
                 if (getCurrentSlideLength() != -1) {
-                    DrawingTest.slideReturned = false;
+                    SimulatorDriver.slideReturned = false;
                 }
             }
 
@@ -198,7 +198,7 @@ public class Robot {
         double upperMostY = position[1]
                 - Math.abs((Math.sqrt(2) * sizeY) * Math.cos(Math.PI / 4 - orientation % 90 * Math.PI / 180));
         // Checks if the slide has returned yet
-        if (DrawingTest.slideReturned) {
+        if (SimulatorDriver.slideReturned) {
             // if deposit position is above the shared shipping hub
             if (inShared(getPositionAtSlideEnd())) {
                 // if currently has ball

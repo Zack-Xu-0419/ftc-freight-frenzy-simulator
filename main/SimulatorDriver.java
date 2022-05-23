@@ -8,7 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class DrawingTest extends JPanel implements MouseListener {
+public class SimulatorDriver extends JPanel implements MouseListener {
 
     static Field field = new Field();
     static Robot robot = new Robot();
@@ -68,7 +68,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         Drawer.drawControls(g);
     }
 
-    public DrawingTest() {
+    public SimulatorDriver() {
         // Sets focus onto the window
         setFocusable(true);
         requestFocus();
@@ -177,12 +177,12 @@ public class DrawingTest extends JPanel implements MouseListener {
         JFrame window = new JFrame("FTC Freight Frenzy");
         window.setBounds(0, 0, 1300 + 20, 900 + 57);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        DrawingTest dt = new DrawingTest();
-        dt.setBackground(Color.WHITE);
+        SimulatorDriver sd = new SimulatorDriver();
+        sd.setBackground(Color.WHITE);
         Container c = window.getContentPane();
-        window.add(dt);
+        window.add(sd);
         window.setVisible(true);
-        refreshScreen(dt);
+        refreshScreen(sd);
         System.out.println("App is running");
     }
 
@@ -441,7 +441,7 @@ public class DrawingTest extends JPanel implements MouseListener {
     }
 
     // Drawing loop thread
-    public static void refreshScreen(DrawingTest param) {
+    public static void refreshScreen(SimulatorDriver param) {
         refreshThread = new Thread() {
             public void run() {
                 while (!end) {
