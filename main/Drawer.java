@@ -55,6 +55,8 @@ public class Drawer {
     }
 
     public static void drawField(Graphics g, Field field) {
+        g.setColor(new Color(241, 241, 241));
+        g.fillRect(0, 0, 900, 900);
         g.setColor(Color.BLACK);
         // draw edge of square and grid
         g.drawRect(0, 0, field.size, field.size);
@@ -62,22 +64,31 @@ public class Drawer {
             g.drawLine(0, i * field.robotAreaSize, field.size, i * field.robotAreaSize);
             g.drawLine(i * field.robotAreaSize, 0, i * field.robotAreaSize, field.size);
         }
-
-
-
         // draw game elements
         for (Ball ball : field.balls) {
             // if not picked up
-            if (!ball.isPickedUp())
+            if (!ball.isPickedUp()) {
+                g.setColor(Color.WHITE);
+                g.fillRect(ball.getX(), ball.getY(), 10, 10);
+                g.setColor(Color.BLACK);
                 g.drawOval(ball.getX(), ball.getY(), 10, 10);
+            }
         }
         for (Cube cube : field.cubes) {
-            if (!cube.isPickedUp())
+            if (!cube.isPickedUp()) {
+                g.setColor(Color.YELLOW);
+                g.fillRect(cube.getX(), cube.getY(), 10, 10);
+                g.setColor(Color.BLACK);
                 g.drawRect(cube.getX(), cube.getY(), 10, 10);
+            }
         }
         for (Duck duck : field.ducks) {
-            if (!duck.isPickedUp())
+            if (!duck.isPickedUp()) {
+                g.setColor(Color.YELLOW);
+                g.fillOval(duck.getX(), duck.getY(), 10, 10);
+                g.setColor(Color.BLACK);
                 g.drawOval(duck.getX(), duck.getY(), 10, 10);
+            }
         }
 
         // draw barer
@@ -102,6 +113,7 @@ public class Drawer {
         g.drawString("Alliance Hub: " + allianceScore, 975, 50);
         g.drawString("Shared Hub: " + sharedScore, 975, 100);
         g.drawString("Duck Spinner: " + duckScore, 975, 150);
+        g.drawString("Total Score: " + (allianceScore + sharedScore + duckScore), 975, 200);
         g.setFont(oldFont);
     }
 
@@ -119,7 +131,7 @@ public class Drawer {
         if (time <= 30 && time % 2 == 0) {
             g.setColor(Color.RED);
         }
-        g.drawString(timerString, 975, 250);
+        g.drawString(timerString, 975, 300);
         g.setColor(Color.BLACK);
     }
 
