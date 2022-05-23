@@ -24,7 +24,7 @@ public class Drawer {
         g2D.setStroke(originalStroke);
         g2D.setColor(Color.BLACK);
 
-        // Draw intake left
+        // Draw red intake
         g2D.setColor(Color.RED);
         if (robot.intakeDownLeft) {
             g2D.fillRect(robot.getPosition()[0] - robot.getSizeX() - 20, robot.getPosition()[1] - robot.getSizeY() / 2,
@@ -32,6 +32,8 @@ public class Drawer {
                     robot.getSizeY());
             robot.intake(field);
         }
+
+        // Draw blue intake
         g2D.setColor(Color.BLUE);
         if (robot.intakeDownRight) {
             g2D.fillRect(robot.getPosition()[0] + robot.getSizeX() + 20 - (robot.getSizeX() - 20),
@@ -43,15 +45,18 @@ public class Drawer {
 
         // If robot has game element, draw indication
         if (robot.hasGameElement) {
+            // If the slide has returned, draw green
             if (DrawingTest.slideReturned) {
                 g2D.setColor(Color.GREEN);
                 g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
             }
+            // If the slide hasn't returned, draw orange
             else {
                 g2D.setColor(Color.ORANGE);
                 g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
             }
         }
+        // If the robot is fried, draw red
         if (robot.isFried) {
             g2D.setColor(Color.RED);
             g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
@@ -61,6 +66,8 @@ public class Drawer {
         // rotate back the graphic so that next time it be stadard direction, this will
         // not affect previous drawing
         g2D.rotate(-1 * Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
+
+        // Indicator for slide end
         g2D.fillOval(robot.getPositionAtSlideEnd()[0], robot.getPositionAtSlideEnd()[1], 5, 5);
     }
 
@@ -101,24 +108,28 @@ public class Drawer {
             }
         }
 
-        // draw barer
+        // draw barrier
         g.drawRect(100, 275, 700, 50);
         g.drawRect(275, 100, 50, 175);
         g.drawRect(575, 100, 50, 175);
 
         // draw hubs
         g.setColor(Color.gray);
+        // Shared shipping hub
         g.fillOval(400, 100, 100, 100);
+        // Alliance Hub
         g.fillOval(250, 475, 100, 100);
     }
 
     // draw the scoring board
     public static void drawScore(Graphics g, Field field, Robot robot, boolean isParked) {
         g.setColor(Color.BLACK);
+        // Calculate total score
         int allianceScore = Scoring.score(field.allianceHub);
         int sharedScore = Scoring.score((field.sharedHub));
         int duckScore = Scoring.score(field.carosel);
         int totalScore = allianceScore + sharedScore + duckScore - 10 * robot.getPenalties();
+        // Display the score
         Font oldFont = g.getFont();
         g.setFont(new Font("Arial", Font.PLAIN, 24));
         g.drawString("Alliance Hub: " + allianceScore, 975, 50);
@@ -132,6 +143,7 @@ public class Drawer {
         }
         //if parked correctly after the game ended, add 6 points
         if (isParked) {
+            // If the total score is less than zero, display 0
             if (totalScore + 6 < 0) {
                 g.drawString("Total Score: " + 0 , 975, 250);
             }
@@ -139,6 +151,7 @@ public class Drawer {
                 g.drawString("Total Score: " + (totalScore + 6), 975, 250);
             }
         } else {
+            // If the total score is less than zero, display 0
             if (totalScore < 0) {
                 g.drawString("Total Score: " + 0, 975, 250);
             }
@@ -154,13 +167,16 @@ public class Drawer {
         g.setColor(Color.BLACK);
         Font oldFont = g.getFont();
         g.setFont(new Font("Arial", Font.PLAIN, 36));
+        // Draws the timer string
         String timerString = "" + time / 60 + ":";
         if (time % 60 < 10) {
+            // Handles if the seconds place is single digit
             timerString += ("0" + time % 60);
         }
         else {
             timerString += time % 60;
         }
+        // Time flashes red at endgame
         if (time <= 30 && time % 2 == 0) {
             g.setColor(Color.RED);
         }
@@ -174,7 +190,9 @@ public class Drawer {
         g2D.setColor(Color.BLACK);
         g2D.fillOval(-field.robotAreaSize / 2, field.size - field.robotAreaSize / 2, field.robotAreaSize,
                 field.robotAreaSize);
+        // "Spins" duck based on how long the robot has been near the carosel
         g2D.rotate(-Math.toRadians(DrawingTest.caroselTime * 9 / 100.), 0, 900);
+        // Displays a duck on the carosel
         if (field.carosel.getDucks() != 0) {
             g2D.drawOval(50, 890, 10, 10);
             g2D.setColor(Color.YELLOW);

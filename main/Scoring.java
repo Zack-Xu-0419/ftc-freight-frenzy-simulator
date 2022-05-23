@@ -7,6 +7,7 @@ public class Scoring {
     //count the scoring for given stationary element
     public static int score(StationaryElement stationaryElement) {
         int score = 0;
+        // Checks the type of the stationary element, and scores accordingly
         if (stationaryElement instanceof Carosel) {
             score = (10 - ((Carosel) stationaryElement).getDucks()) * 6;
         }

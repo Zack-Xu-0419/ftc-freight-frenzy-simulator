@@ -26,7 +26,7 @@ public class Field {
     // size of a grid
     public final int robotAreaSize = 150;
 
-    // inistialize all the game element, set radom postion
+    // initialize all the game element, set random position
     public Field() {
         for (int i = 0; i < numOfBall; i++) {
             int x, y;
@@ -54,14 +54,14 @@ public class Field {
 
         }
 
+        // Ducks are initialized so that they exist and can be moved when the duck is "spun" off of the carosel
         for(int i = 0; i < numOfDuck; i++){
             int x, y;
             ducks[i] = new Duck(10000, 10000);
-
         }
     }
 
-    // check whether this radom point has something on it
+    // check whether this random point has something on it
     // make sure different elements don't overlap
     private boolean check(int x, int y) {
         for (int i = 0; i < numOfBall && balls[i] != null; i++) {
