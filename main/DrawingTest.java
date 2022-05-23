@@ -18,18 +18,30 @@ public class DrawingTest extends JPanel implements MouseListener {
     public static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
             rotateLeft = false, rotateRight = false, extendingSlide = false, retractingSlide = false, slideReturned = true,
             realisticMode = false;
+
+    // Robots current orientation
     public static int currentOrientation;
+
+    // Game time initializer
     public static int gameTime = 120;
     public static int caroselTime = 0;
+
+    // End of Game boolean
     public static boolean end = false;
 
+    // Counters for key press toggles
     public static int rIntakeCounter = 0;
     public static int bIntakeCounter = 0;
     public static int slideModeCounter = 0;
+
+    // Flag for manual slide control
     public static boolean slideManualMode = false;
 
+    // Timer and Timer Runner for carosel
     public static Runnable caroselTimer;
     static ScheduledExecutorService caroselTimeScheduler = Executors.newScheduledThreadPool(1);
+
+    // Flag for if the robot is near the carosel
     public static boolean onceNear = false;
 
     // This variable is required for window focusing for keyboard detection
@@ -38,6 +50,7 @@ public class DrawingTest extends JPanel implements MouseListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         boolean isParked = false;
+        // Math for determining whether robot is in warehouse
         if(gameTime == 0){
             double rightMostX = robot.getPosition()[0]
                     + Math.abs((Math.sqrt(2) * robot.getSizeX()) * Math.cos(Math.PI / 4 - robot.getOrientation() % 90 * Math.PI / 180));
@@ -49,7 +62,6 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
         Drawer.drawField(g, field);
         Drawer.drawRobot(g, robot, field);
-
         Drawer.drawScore(g, field, robot, isParked);
         Drawer.drawTimer(g, gameTime);
         Drawer.drawCarosel(g, field);
@@ -64,8 +76,7 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         // Keybinds for robot movement. These listen for key presses.
 
-        // You first get the input in this step, which gets the key, and then you set
-        // that
+        // You first get the input in this step, which gets the key, and then you set that
         // key press to an action key, which is the last string.
 
         // Keybind for when a keyboard key corresponding to movement is pressed.
@@ -142,6 +153,7 @@ public class DrawingTest extends JPanel implements MouseListener {
     }
 
     public static void main(String[] args) {
+        // Code for game timer
         final ScheduledExecutorService gameTimeScheduler = Executors.newScheduledThreadPool(1);
 
         final Runnable runnable = new Runnable() {
@@ -153,8 +165,14 @@ public class DrawingTest extends JPanel implements MouseListener {
             }
         };
         gameTimeScheduler.scheduleAtFixedRate(runnable, 1, 1, SECONDS);
+
+        // Robot size initializer
         robot.setSize(50, 50);
+
+        // Robot initial position
         robot.setPosition(robot.getSizeX(), 500);
+
+        // Window setting
         JFrame window = new JFrame("FTC Freight Frenzy");
         window.setBounds(0, 0, 1200 + 20, 900 + 57);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -189,6 +207,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         System.out.println("" + p.x + ", " + p.y);
     }
 
+    // Tracks whether the movement keys are pressed
     public class PressMoveAction extends AbstractAction {
 
         String direction;
@@ -217,6 +236,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks when movement keys are not pressed
     public class ReleaseMoveAction extends AbstractAction {
 
         String direction;
@@ -245,6 +265,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks if rotate keys are pressed
     public class PressRotateAction extends AbstractAction {
 
         String direction;
@@ -266,6 +287,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks if rotate keys are not pressed
     public class ReleaseRotateAction extends AbstractAction {
 
         String direction;
@@ -287,6 +309,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks if slide keys were pressed. The boolean flags are changed regardless of slide mode
     public class SlidePressAction extends AbstractAction {
 
         // True - extend; False - retract
@@ -312,6 +335,8 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks if slide keys are not pressed. Only fires when manual mode is on.
+    // Sets boolean flags to false when keys are not pressed
     public class SlideReleaseAction extends AbstractAction {
 
         // True - extend; False - retract
@@ -333,6 +358,8 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks whether the slide mode key was pressed
+    // Acts as a toggle action
     public class SlideModeAction extends AbstractAction {
 
         @Override
@@ -349,6 +376,8 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks if the red intake key was pressed and sets the flag
+    // Will automatically make the slide retract
     public class RedIntakeAction extends AbstractAction {
 
         @Override
@@ -365,6 +394,8 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks if the blue intake key was pressed and sets the flag
+    // Will automatically make the slide retract
     public class BlueIntakeAction extends AbstractAction {
 
         @Override
@@ -381,16 +412,20 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Tracks if the deposit key was pressed
     public class DepositAction extends AbstractAction {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            // Only deposits if the robot has a game element
             if (robot.hasGameElement) {
                 robot.deposit(field);
             }
         }
     }
 
+    // Checks if "realistic mode" key was pressed
+    // Allows the robot to have a chance to fry each frame
     public class RealismAction extends AbstractAction {
 
         @Override
@@ -404,15 +439,18 @@ public class DrawingTest extends JPanel implements MouseListener {
         }
     }
 
+    // Drawing loop thread
     public static void refreshScreen(DrawingTest param) {
         refreshThread = new Thread() {
             public void run() {
                 while (!end) {
                     try {
+                        // The thread does nothing when the game timer runs down
                         if (gameTime <= 0) {
                             end = true;
                             continue;
                         }
+                        // Creates random numbers each frame for realistic mode frying
                         if (realisticMode) {
                             Random random = new Random();
                             int chance = random.nextInt(7200);
@@ -420,6 +458,7 @@ public class DrawingTest extends JPanel implements MouseListener {
                                 robot.isFried = true;
                             }
                         }
+                        // Checks if the robot is fried. If it is, no movement is possible.
                         if (!robot.isFried) {
                             currentOrientation = robot.getOrientation();
                             if (upPressed) {
@@ -463,29 +502,39 @@ public class DrawingTest extends JPanel implements MouseListener {
                                     robot.slideExtended = false;
                                 }
                             }
+                            // Checks if robot is near carosel and is in endgame
                             if (robot.nearCarosel() && gameTime <= 30) {
+                                // If the near flag has not been marked as true before.
                                 if (!onceNear) {
+                                    // Create timer scheduler
                                     caroselTimeScheduler = Executors.newScheduledThreadPool(1);
+                                    // Set flag as true so that a timer does not get created every frame
                                     onceNear = true;
                                     caroselTimer = new Runnable() {
                                         public void run() {
                                             caroselTime++;
+                                            // Carosel timer will run for one second before duck drops
                                             if (caroselTime >= 1000) {
                                                 field.carosel.removeDuck();
+                                                // "Drops" the duck into the field
                                                 if (field.carosel.getDucks() != 0) {
                                                     field.ducks[10 - field.carosel.getDucks() - 1].move(0, 900 - 75 - 10);
                                                 }
+                                                // Reset the timer scheduler and timer
                                                 caroselTimeScheduler = Executors.newScheduledThreadPool(1);
                                                 caroselTime = 0;
                                             }
                                         }
                                     };
+                                    // Start timer
                                     caroselTimeScheduler.scheduleAtFixedRate(caroselTimer, 0, 1, MILLISECONDS);
                                 }
                             } else {
+                                // Carosel timer is paused, and near carosel flag is marked as false
                                 onceNear = false;
                                 caroselTimeScheduler.shutdown();
                             }
+                            // Checks if the slide is returned for robot depositing
                             if (!slideReturned) {
                                 if (robot.getCurrentSlideLength() == -1) {
                                     slideReturned = true;
