@@ -65,6 +65,7 @@ public class DrawingTest extends JPanel implements MouseListener {
         Drawer.drawScore(g, field, robot, isParked);
         Drawer.drawTimer(g, gameTime);
         Drawer.drawCarosel(g, field);
+        Drawer.drawControls(g);
     }
 
     public DrawingTest() {
@@ -174,7 +175,7 @@ public class DrawingTest extends JPanel implements MouseListener {
 
         // Window setting
         JFrame window = new JFrame("FTC Freight Frenzy");
-        window.setBounds(0, 0, 1200 + 20, 900 + 57);
+        window.setBounds(0, 0, 1300 + 20, 900 + 57);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DrawingTest dt = new DrawingTest();
         dt.setBackground(Color.WHITE);

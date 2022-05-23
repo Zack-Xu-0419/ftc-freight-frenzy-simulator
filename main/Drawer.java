@@ -144,35 +144,59 @@ public class Drawer {
         // Display the score
         Font oldFont = g.getFont();
         g.setFont(new Font("Arial", Font.PLAIN, 24));
-        g.drawString("Alliance Hub: " + allianceScore, 975, 50);
-        g.drawString("Shared Hub: " + sharedScore, 975, 100);
-        g.drawString("Duck Spinner: " + duckScore, 975, 150);
-        g.drawString("Penalties: " + (-10 * robot.getPenalties()), 975, 200);
+        g.drawString("Alliance Hub: " + allianceScore, 1000, 50);
+        g.drawString("Shared Hub: " + sharedScore, 1000, 100);
+        g.drawString("Duck Spinner: " + duckScore, 1000, 150);
+        g.drawString("Penalties: " + (-10 * robot.getPenalties()), 1000, 200);
         if (DrawingTest.realisticMode) {
             g.setColor(Color.RED);
-            g.drawString("Realistic Mode On!", 975, 350);
+            g.drawString("Realistic Mode On!", 990, 350);
             g.setColor(Color.BLACK);
         }
         //if parked correctly after the game ended, add 6 points
         if (isParked) {
             // If the total score is less than zero, display 0
             if (totalScore + 6 < 0) {
-                g.drawString("Total Score: " + 0 , 975, 250);
+                g.drawString("Total Score: " + 0 , 1000, 250);
             }
             else {
-                g.drawString("Total Score: " + (totalScore + 6), 975, 250);
+                g.drawString("Total Score: " + (totalScore + 6), 1000, 250);
             }
         } else {
             // If the total score is less than zero, display 0
             if (totalScore < 0) {
-                g.drawString("Total Score: " + 0, 975, 250);
+                g.drawString("Total Score: " + 0, 1000, 250);
             }
             else {
-                g.drawString("Total Score: " + (totalScore), 975, 250);
+                g.drawString("Total Score: " + (totalScore), 1000, 250);
             }
         }
         g.setFont(oldFont);
         
+    }
+
+    public static void drawControls(Graphics g) {
+        Font oldFont = g.getFont();
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.PLAIN, 24));
+        g.drawString("Arrow Keys - Movement", 925, 400);
+        g.drawString("A & D - Rotation", 925, 450);
+        g.drawString("Q & E - Intakes", 925, 500);
+        g.drawString("Shift Key - Toggle Manual Slide", 925, 550);
+        g.drawString("W & S - Extend and Retract Slide", 925, 600);
+        g.drawString("If in manual mode, hold to adjust.", 925, 650);
+        g.drawString("Spacebar - Deposit", 925, 700);
+        g.drawString("Backspace - Realistic Mode", 925, 750);
+        if (DrawingTest.slideManualMode) {
+            g.setColor(Color.GREEN);
+            g.drawString("Manual Mode ON!", 990, 825);
+        }
+        else {
+            g.setColor(Color.RED);
+            g.drawString("Manual Mode OFF!", 990, 825);
+        }
+        g.setColor(Color.BLACK);
+        g.setFont(oldFont);
     }
 
     public static void drawTimer(Graphics g, int time) {
@@ -192,7 +216,7 @@ public class Drawer {
         if (time <= 30 && time % 2 == 0) {
             g.setColor(Color.RED);
         }
-        g.drawString(timerString, 975, 305);
+        g.drawString(timerString, 1040, 305);
         g.setColor(Color.BLACK);
     }
 
