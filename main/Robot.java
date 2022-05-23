@@ -15,6 +15,7 @@ public class Robot {
     public boolean intakeDownRight = false;
     public boolean hasGameElement = false;
     public int gameElement[] = { 0, 0 };
+    public boolean isFried = false;
 
     Robot() {
 

@@ -52,7 +52,7 @@ public class Drawer {
                 g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
             }
         }
-        if (DrawingTest.friedRobot) {
+        if (robot.isFried) {
             g2D.setColor(Color.RED);
             g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
         }

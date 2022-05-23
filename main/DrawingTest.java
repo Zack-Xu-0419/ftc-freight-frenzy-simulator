@@ -17,7 +17,7 @@ public class DrawingTest extends JPanel implements MouseListener {
     // Flags for handling multiple key presses at the same time
     public static boolean upPressed = false, downPressed = false, leftPressed = false, rightPressed = false,
             rotateLeft = false, rotateRight = false, extendingSlide = false, retractingSlide = false, slideReturned = true,
-            realisticMode = false, friedRobot = false;
+            realisticMode = false;
     public static int currentOrientation;
     public static int gameTime = 120;
     public static int caroselTime = 0;
@@ -417,10 +417,10 @@ public class DrawingTest extends JPanel implements MouseListener {
                             Random random = new Random();
                             int chance = random.nextInt(7200);
                             if (chance < 2) {
-                                friedRobot = true;
+                                robot.isFried = true;
                             }
                         }
-                        if (!friedRobot) {
+                        if (!robot.isFried) {
                             currentOrientation = robot.getOrientation();
                             if (upPressed) {
                                 robot.move(3);
