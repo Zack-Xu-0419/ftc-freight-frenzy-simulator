@@ -63,7 +63,7 @@ public class Drawer {
         }
 
         g2D.setColor(Color.BLACK);
-        // rotate back the graphic so that next time it be stadard direction, this will
+        // rotate back the graphic so that next time it be standard direction, this will
         // not affect previous drawing
         g2D.rotate(-1 * Math.toRadians(robot.getOrientation()), robot.getPosition()[0], robot.getPosition()[1]);
 
@@ -72,6 +72,7 @@ public class Drawer {
     }
 
     public static void drawField(Graphics g, Field field) {
+        Graphics2D g2D = (Graphics2D) g;
         g.setColor(new Color(241, 241, 241));
         g.fillRect(0, 0, 900, 900);
         g.setColor(Color.BLACK);
@@ -81,6 +82,15 @@ public class Drawer {
             g.drawLine(0, i * field.robotAreaSize, field.size, i * field.robotAreaSize);
             g.drawLine(i * field.robotAreaSize, 0, i * field.robotAreaSize, field.size);
         }
+
+        Stroke originalStroke = g2D.getStroke();
+        g2D.setStroke(new BasicStroke(10));
+        g2D.setColor(Color.WHITE);
+        g2D.drawLine(0, 2 * field.robotAreaSize, 2 * field.robotAreaSize, 2 * field.robotAreaSize);
+        g2D.drawLine(2 * field.robotAreaSize, 0, 2 * field.robotAreaSize, 2 * field.robotAreaSize);
+        g2D.setColor(Color.BLACK);
+        g2D.setStroke(originalStroke);
+
         // draw game elements
         for (Ball ball : field.balls) {
             // if not picked up
@@ -109,9 +119,11 @@ public class Drawer {
         }
 
         // draw barrier
+        g2D.setStroke(new BasicStroke(5));
         g.drawRect(100, 275, 700, 50);
         g.drawRect(275, 100, 50, 175);
         g.drawRect(575, 100, 50, 175);
+        g2D.setStroke(originalStroke);
 
         // draw hubs
         g.setColor(Color.gray);
