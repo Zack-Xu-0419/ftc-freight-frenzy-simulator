@@ -109,7 +109,7 @@ public class Drawer {
     }
 
     // draw the scoring board
-    public static void drawScore(Graphics g, Field field) {
+    public static void drawScore(Graphics g, Field field, boolean isParked) {
         g.setColor(Color.BLACK);
         int allianceScore = Scoring.score(field.allianceHub);
         int sharedScore = Scoring.score((field.sharedHub));
@@ -119,8 +119,14 @@ public class Drawer {
         g.drawString("Alliance Hub: " + allianceScore, 975, 50);
         g.drawString("Shared Hub: " + sharedScore, 975, 100);
         g.drawString("Duck Spinner: " + duckScore, 975, 150);
-        g.drawString("Total Score: " + (allianceScore + sharedScore + duckScore), 975, 200);
+        //if parked correctly after the game ended, add 6 points
+        if (isParked) {
+            g.drawString("Total Score: " + (allianceScore + sharedScore + duckScore + 6) , 975, 200);
+        } else {
+            g.drawString("Total Score: " + (allianceScore + sharedScore + duckScore), 975, 200);
+        }
         g.setFont(oldFont);
+        
     }
 
     public static void drawTimer(Graphics g, int time) {
