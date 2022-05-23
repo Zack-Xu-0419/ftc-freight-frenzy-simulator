@@ -7,7 +7,7 @@ public class Robot {
     private int orientation = 0; // Degree of rotation. 0 means Slide is facing to the other alliance
     private int speed = 5;
     private int maxSlideLength = 400;
-    private int currentSlideLength = 0;
+    private int currentSlideLength = -1;
     private int oldX = 0;
     private int oldY = 0;
     public boolean slideExtended = false;
@@ -119,6 +119,9 @@ public class Robot {
     public void setCurrentSlideLength(int newSlideLength) {
         int oldSlideLength = currentSlideLength;
         currentSlideLength = newSlideLength;
+        if (currentSlideLength == 0) {
+            currentSlideLength = -1;
+        }
         if (getPositionAtSlideEnd()[0] >= 900 || getPositionAtSlideEnd()[0] <= 0
                 || getPositionAtSlideEnd()[1] >= 900 || getPositionAtSlideEnd()[1] <= 0) {
             currentSlideLength = oldSlideLength;

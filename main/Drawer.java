@@ -52,6 +52,10 @@ public class Drawer {
                 g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
             }
         }
+        if (DrawingTest.friedRobot) {
+            g2D.setColor(Color.RED);
+            g2D.fillOval(robot.getPosition()[0] - 15, robot.getPosition()[1] - 15, 30, 30);
+        }
 
         g2D.setColor(Color.BLACK);
         // rotate back the graphic so that next time it be stadard direction, this will
@@ -119,6 +123,11 @@ public class Drawer {
         g.drawString("Alliance Hub: " + allianceScore, 975, 50);
         g.drawString("Shared Hub: " + sharedScore, 975, 100);
         g.drawString("Duck Spinner: " + duckScore, 975, 150);
+        if (DrawingTest.realisticMode) {
+            g.setColor(Color.RED);
+            g.drawString("Realistic Mode On!", 975, 250);
+            g.setColor(Color.BLACK);
+        }
         //if parked correctly after the game ended, add 6 points
         if (isParked) {
             g.drawString("Total Score: " + (allianceScore + sharedScore + duckScore + 6) , 975, 200);
