@@ -35,9 +35,20 @@ public class DrawingTest extends JPanel implements MouseListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        boolean isParked = false;
+        if(gameTime == 0){
+            double rightMostX = robot.getPosition()[0]
+                    + Math.abs((Math.sqrt(2) * robot.getSizeX()) * Math.cos(Math.PI / 4 - robot.getOrientation() % 90 * Math.PI / 180));
+            double downMostY = robot.getPosition()[1]
+                    + Math.abs((Math.sqrt(2) * robot.getSizeY()) * Math.cos(Math.PI / 4 - robot.getOrientation() % 90 * Math.PI / 180));
+            if(downMostY <= 300 && rightMostX <= 300){
+                isParked = true;
+            }
+        }
         Drawer.drawField(g, field);
         Drawer.drawRobot(g, robot, field);
-        Drawer.drawScore(g, field);
+        
+        Drawer.drawScore(g, field, isParked);
         Drawer.drawTimer(g, gameTime);
         Drawer.drawCarosel(g, field);
     }
